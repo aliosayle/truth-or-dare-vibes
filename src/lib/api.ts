@@ -1,22 +1,26 @@
 import axios from 'axios';
 import { Pack, Card } from '../contexts/GameContext';
 
-const API_URL = 'http://161.97.177.233:3001/api';
-
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  type: 'admin' | 'premium' | 'normal';
-}
-
 interface AuthResponse {
+  message: string;
   user: User;
   token: string;
-  message: string;
 }
 
-// Create axios instance with default config
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  type?: string;
+}
+
+const isDev = import.meta.env.DEV;
+const API_URL = isDev 
+  ? 'http://localhost:3005/api' 
+  : 'http://161.97.177.233:3005/api';
+
+console.log('API URL set to:', API_URL);
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -24,7 +28,7 @@ const api = axios.create({
   },
 });
 
-// Add auth token to requests
+// Add authorization header if token exists
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -36,105 +40,93 @@ api.interceptors.request.use((config) => {
 // Auth API
 export const authApi = {
   login: async (email: string, password: string): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/login', { 
-      username: email,
-      email, 
-      password 
-    });
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+    try {
+      const response = await api.post<AuthResponse>('/auth/login', { email, password });
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
     }
-    return response.data;
   },
-
   register: async (username: string, email: string, password: string, type?: string): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/register', { username, email, password, type });
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+    try {
+      const response = await api.post<AuthResponse>('/auth/register', { username, email, password, type });
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Register error:', error);
+      throw error;
     }
-    return response.data;
   },
-
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   },
-
-  getCurrentUser: async (): Promise<User> => {
-    const response = await api.get<User>('/auth/me');
-    return response.data;
+  getCurrentUser: (): User | null => {
+    const userStr = localStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
   },
-
-  getAllUsers: async (): Promise<User[]> => {
-    const response = await api.get<User[]>('/auth/users');
-    return response.data;
+  setCurrentUser: (user: User, token: string): User => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    return user;
   },
-
-  updateUser: async (id: string, updates: Partial<User>): Promise<User> => {
-    const response = await api.put<User>(`/auth/users/${id}`, updates);
-    return response.data;
-  },
-
-  deleteUser: async (id: string): Promise<{ message: string }> => {
-    const response = await api.delete<{ message: string }>(`/auth/users/${id}`);
-    return response.data;
-  },
+  isAuthenticated: (): boolean => {
+    return localStorage.getItem('token') !== null;
+  }
 };
 
 // Packs API
 export const packsApi = {
   getAllPacks: async (): Promise<Pack[]> => {
-    const response = await api.get<Pack[]>('/packs');
-    return response.data;
+    try {
+      const response = await api.get<Pack[]>('/packs');
+      return response.data;
+    } catch (error) {
+      console.error('Get all packs error:', error);
+      throw error;
+    }
   },
-
   getPackById: async (id: string): Promise<Pack> => {
-    const response = await api.get<Pack>(`/packs/${id}`);
-    return response.data;
+    try {
+      const response = await api.get<Pack>(`/packs/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Get pack ${id} error:`, error);
+      throw error;
+    }
   },
-
-  createPack: async (packData: Omit<Pack, 'id' | 'created_at' | 'updated_at'>): Promise<Pack> => {
+  createPack: async (packData: Partial<Pack>): Promise<Pack> => {
     const response = await api.post<Pack>('/packs', packData);
     return response.data;
   },
-
   updatePack: async (id: string, packData: Partial<Pack>): Promise<Pack> => {
     const response = await api.put<Pack>(`/packs/${id}`, packData);
     return response.data;
   },
-
-  deletePack: async (id: string): Promise<{ message: string }> => {
-    const response = await api.delete<{ message: string }>(`/packs/${id}`);
-    return response.data;
-  },
+  deletePack: async (id: string): Promise<void> => {
+    await api.delete(`/packs/${id}`);
+  }
 };
 
 // Cards API
 export const cardsApi = {
-  getAllCards: async (): Promise<Card[]> => {
-    const response = await api.get<Card[]>('/cards');
-    return response.data;
-  },
+  getCardsForPack: async (packId: number): Promise<Card[]> => {
+    try {
+      const response = await api.get<Card[]>(`/packs/${packId}/cards`);
+      return response.data;
+    } catch (error) {
+      console.error(`Get cards for pack ${packId} error:`, error);
+      throw error;
+    }
+  }
+};
 
-  getCardById: async (id: string): Promise<Card> => {
-    const response = await api.get<Card>(`/cards/${id}`);
-    return response.data;
-  },
-
-  createCard: async (cardData: Omit<Card, 'id' | 'created_at' | 'updated_at'>): Promise<Card> => {
-    const response = await api.post<Card>('/cards', cardData);
-    return response.data;
-  },
-
-  updateCard: async (id: string, cardData: Partial<Card>): Promise<Card> => {
-    const response = await api.put<Card>(`/cards/${id}`, cardData);
-    return response.data;
-  },
-
-  deleteCard: async (id: string): Promise<{ message: string }> => {
-    const response = await api.delete<{ message: string }>(`/cards/${id}`);
-    return response.data;
-  },
-}; 
+export default api;

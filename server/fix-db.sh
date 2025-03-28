@@ -1,5 +1,17 @@
+#!/bin/bash
+
+# Database credentials
+DB_USER="root"
+DB_PASS="goldfish"
+DB_NAME="truth_or_dare"
+
+# Create the SQL script
+cat > temp.sql << 'EOF'
+-- Drop database if exists (comment this out if you don't want to lose data)
+DROP DATABASE IF EXISTS truth_or_dare;
+
 -- Create database
-CREATE DATABASE IF NOT EXISTS truth_or_dare;
+CREATE DATABASE truth_or_dare;
 
 -- Connect to the database
 USE truth_or_dare;
@@ -48,7 +60,7 @@ INSERT INTO users (id, username, email, password, type) VALUES (
   'admin'
 );
 
--- Set variable for admin user
+-- Set admin ID
 SET @admin_id = (SELECT id FROM users WHERE email = 'admin@example.com');
 
 -- Insert initial packs
@@ -57,7 +69,7 @@ INSERT INTO packs (id, name, description, created_by) VALUES
 (UUID(), 'Beirut Nights', 'Fun challenges inspired by Lebanese nightlife and entertainment', @admin_id),
 (UUID(), 'Cedar Adventures', 'Questions and challenges about Lebanese landmarks and nature', @admin_id);
 
--- Set variable for packs
+-- Set pack IDs
 SET @lebanese_culture_id = (SELECT id FROM packs WHERE name = 'Lebanese Culture');
 SET @beirut_nights_id = (SELECT id FROM packs WHERE name = 'Beirut Nights');
 SET @cedar_adventures_id = (SELECT id FROM packs WHERE name = 'Cedar Adventures');
@@ -93,4 +105,13 @@ INSERT INTO cards (id, type, content, pack_id, created_by) VALUES
 (UUID(), 'dare', 'Describe Baalbek ruins as if you''re a tour guide', @cedar_adventures_id, @admin_id),
 (UUID(), 'dare', 'Draw a quick sketch of the Lebanese flag', @cedar_adventures_id, @admin_id),
 (UUID(), 'dare', 'Create a short advertisement promoting tourism in Lebanon', @cedar_adventures_id, @admin_id),
-(UUID(), 'dare', 'Name 5 Lebanese cities in under 10 seconds', @cedar_adventures_id, @admin_id); 
+(UUID(), 'dare', 'Name 5 Lebanese cities in under 10 seconds', @cedar_adventures_id, @admin_id);
+EOF
+
+# Run the SQL script with credentials
+mysql -u"$DB_USER" -p"$DB_PASS" < temp.sql
+
+# Clean up
+rm temp.sql
+
+echo "Database recreated successfully!"

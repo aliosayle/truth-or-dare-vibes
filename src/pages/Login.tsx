@@ -4,21 +4,63 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LogIn, Mail, Lock, UserPlus } from 'lucide-react';
+import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setIsSubmitting(true);
+    
     try {
+      console.log('Attempting login with:', { email });
       await login(email, password);
+      console.log('Login successful, navigating to home');
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Failed to login');
+      console.error('Login error:', err);
+      if (err.response && err.response.data) {
+        const responseData = err.response.data;
+        const status = err.response.status;
+        console.error('API error response:', { status, data: responseData });
+        setError(responseData?.message || `Error ${status}: Failed to login`);
+      } else {
+        setError(err.message || 'Failed to login');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Test direct API call
+  const testDirectLogin = async () => {
+    try {
+      console.log('Testing direct API call to login');
+      const API_URL = 'http://161.97.177.233:3001/api';
+      const response = await axios.post(`${API_URL}/auth/login`, { 
+        email, 
+        password 
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Direct login API response:', response.data);
+      alert('Direct API call successful! Check console for details.');
+    } catch (err: any) {
+      console.error('Direct API call error:', err);
+      if (err.response && err.response.data) {
+        alert(`Direct API error: ${err.response.status} - ${err.response.data?.message || err.message}`);
+      } else {
+        alert(`Unknown error: ${err.message}`);
+      }
     }
   };
 
@@ -93,10 +135,15 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-lg transition-colors"
+                disabled={isSubmitting}
+                className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-lg transition-colors disabled:opacity-50"
               >
-                <LogIn className="h-5 w-5" />
-                Sign In
+                {isSubmitting ? 'Signing In...' : (
+                  <>
+                    <LogIn className="h-5 w-5" />
+                    Sign In
+                  </>
+                )}
               </button>
             </form>
 
@@ -107,6 +154,15 @@ const Login = () => {
                   Sign up
                 </Link>
               </p>
+            </div>
+            
+            <div className="mt-4 text-center">
+              <button 
+                onClick={testDirectLogin}
+                className="text-xs text-white/50 hover:text-white/70"
+              >
+                Test direct API call
+              </button>
             </div>
           </div>
         </motion.div>

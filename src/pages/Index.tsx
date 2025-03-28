@@ -4,7 +4,7 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Dices, Flag } from 'lucide-react';
+import { Dices, Flag, Flame, MessageCircle } from 'lucide-react';
 
 const Index = () => {
   const navigate = useNavigate();

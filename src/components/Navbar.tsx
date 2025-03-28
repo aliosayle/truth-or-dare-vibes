@@ -8,7 +8,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-export const Navbar = () => {
+export const Navbar = ({ hideLogo = false }) => {
   const { isAuthenticated, isAdmin } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -22,11 +22,11 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="w-full p-4">
+    <header className="w-full p-3">
       <div className="container flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2 z-20">
           <PartyPopper className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             TruthOrDare
           </h1>
         </Link>

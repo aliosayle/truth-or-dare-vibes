@@ -10,9 +10,9 @@ export const GameControls = () => {
   const isDisabled = !activePack;
   const isMobile = useIsMobile();
 
-  // For mobile, stack vertically; for desktop, horizontal
+  // For mobile, we'll use a more compact layout
   const containerClass = isMobile
-    ? "flex flex-col gap-3 w-full max-w-md"
+    ? "grid grid-cols-3 gap-2 w-full max-w-md"
     : "flex flex-row gap-4 w-full max-w-md";
 
   return (
@@ -27,10 +27,16 @@ export const GameControls = () => {
           className="flex-1 btn-truth w-full shadow-lg shadow-game-truth/20 font-medium"
           onClick={() => drawCard('truth')}
           disabled={isDisabled}
-          size={isMobile ? "default" : "lg"}
+          size={isMobile ? "sm" : "lg"}
         >
-          <MessageCircleQuestion className="mr-2" />
-          Truth
+          {isMobile ? (
+            <MessageCircleQuestion className={isMobile ? "h-5 w-5" : "mr-2"} />
+          ) : (
+            <>
+              <MessageCircleQuestion className="mr-2" />
+              Truth
+            </>
+          )}
         </Button>
       </motion.div>
       
@@ -39,10 +45,16 @@ export const GameControls = () => {
           className="flex-1 w-full bg-gradient-to-r from-primary to-secondary text-white shadow-lg font-medium"
           onClick={() => drawCard()}
           disabled={isDisabled}
-          size={isMobile ? "default" : "lg"}
+          size={isMobile ? "sm" : "lg"}
         >
-          <Dices className="mr-2" />
-          Random
+          {isMobile ? (
+            <Dices className={isMobile ? "h-5 w-5" : "mr-2"} />
+          ) : (
+            <>
+              <Dices className="mr-2" />
+              Random
+            </>
+          )}
         </Button>
       </motion.div>
       
@@ -51,10 +63,16 @@ export const GameControls = () => {
           className="flex-1 btn-dare w-full shadow-lg shadow-game-dare/20 font-medium"
           onClick={() => drawCard('dare')}
           disabled={isDisabled}
-          size={isMobile ? "default" : "lg"}
+          size={isMobile ? "sm" : "lg"}
         >
-          <Flame className="mr-2" />
-          Dare
+          {isMobile ? (
+            <Flame className={isMobile ? "h-5 w-5" : "mr-2"} />
+          ) : (
+            <>
+              <Flame className="mr-2" />
+              Dare
+            </>
+          )}
         </Button>
       </motion.div>
     </motion.div>

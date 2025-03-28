@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { toast } from "sonner";
 
@@ -93,6 +92,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     const randomCard = cards[Math.floor(Math.random() * cards.length)];
     setCurrentCard(randomCard);
+    // Removed toast notification for card type selection
   };
 
   const generateId = () => Math.random().toString(36).substring(2, 9);

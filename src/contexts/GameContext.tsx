@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { toast } from "@/components/ui/sonner";
 
@@ -24,12 +23,12 @@ const initialPacks: Pack[] = [
     name: 'Casual Fun',
     description: 'Light-hearted questions and dares for everyone',
     cards: [
-      { id: 't1', type: 'truth', content: 'What's the most embarrassing song you have on your playlist?', packId: 'p1' },
-      { id: 't2', type: 'truth', content: 'What was your most awkward first date experience?', packId: 'p1' },
-      { id: 't3', type: 'truth', content: 'What's the weirdest food combination you actually enjoy?', packId: 'p1' },
-      { id: 'd1', type: 'dare', content: 'Text your crush or the last person you dated and tell them you miss their face', packId: 'p1' },
-      { id: 'd2', type: 'dare', content: 'Do your best impression of another player', packId: 'p1' },
-      { id: 'd3', type: 'dare', content: 'Post a selfie with a funny caption on your social media', packId: 'p1' }
+      { id: 't1', type: 'truth', content: "What's the most embarrassing song you have on your playlist?", packId: 'p1' },
+      { id: 't2', type: 'truth', content: "What was your most awkward first date experience?", packId: 'p1' },
+      { id: 't3', type: 'truth', content: "What's the weirdest food combination you actually enjoy?", packId: 'p1' },
+      { id: 'd1', type: 'dare', content: "Text your crush or the last person you dated and tell them you miss their face", packId: 'p1' },
+      { id: 'd2', type: 'dare', content: "Do your best impression of another player", packId: 'p1' },
+      { id: 'd3', type: 'dare', content: "Post a selfie with a funny caption on your social media", packId: 'p1' }
     ]
   },
   {
@@ -37,12 +36,12 @@ const initialPacks: Pack[] = [
     name: 'Party Mode',
     description: 'Spicier questions and challenges for a wild night',
     cards: [
-      { id: 't4', type: 'truth', content: 'When was the last time you lied to get out of plans?', packId: 'p2' },
-      { id: 't5', type: 'truth', content: 'What's the most rebellious thing you did as a teenager?', packId: 'p2' },
-      { id: 't6', type: 'truth', content: 'What's a secret you've never told anyone in this room?', packId: 'p2' },
-      { id: 'd4', type: 'dare', content: 'Let the group browse your camera roll for 30 seconds', packId: 'p2' },
-      { id: 'd5', type: 'dare', content: 'Call someone and sing them happy birthday, even if it's not their birthday', packId: 'p2' },
-      { id: 'd6', type: 'dare', content: 'Speak in an accent of the group's choosing until your next turn', packId: 'p2' }
+      { id: 't4', type: 'truth', content: "When was the last time you lied to get out of plans?", packId: 'p2' },
+      { id: 't5', type: 'truth', content: "What's the most rebellious thing you did as a teenager?", packId: 'p2' },
+      { id: 't6', type: 'truth', content: "What's a secret you've never told anyone in this room?", packId: 'p2' },
+      { id: 'd4', type: 'dare', content: "Let the group browse your camera roll for 30 seconds", packId: 'p2' },
+      { id: 'd5', type: 'dare', content: "Call someone and sing them happy birthday, even if it's not their birthday", packId: 'p2' },
+      { id: 'd6', type: 'dare', content: "Speak in an accent of the group's choosing until your next turn", packId: 'p2' }
     ]
   }
 ];

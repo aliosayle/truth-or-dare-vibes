@@ -3,14 +3,21 @@ import { Button } from "@/components/ui/button";
 import { useGame } from "@/contexts/GameContext";
 import { motion } from "framer-motion";
 import { Dices, MessageCircleQuestion, Flame } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const GameControls = () => {
   const { activePack, drawCard } = useGame();
   const isDisabled = !activePack;
+  const isMobile = useIsMobile();
+
+  // For mobile, stack vertically; for desktop, horizontal
+  const containerClass = isMobile
+    ? "flex flex-col gap-3 w-full max-w-md"
+    : "flex flex-row gap-4 w-full max-w-md";
 
   return (
     <motion.div 
-      className="flex flex-col sm:flex-row gap-4 w-full max-w-md"
+      className={containerClass}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
@@ -20,7 +27,7 @@ export const GameControls = () => {
           className="flex-1 btn-truth w-full shadow-lg shadow-game-truth/20 font-medium"
           onClick={() => drawCard('truth')}
           disabled={isDisabled}
-          size="lg"
+          size={isMobile ? "default" : "lg"}
         >
           <MessageCircleQuestion className="mr-2" />
           Truth
@@ -32,7 +39,7 @@ export const GameControls = () => {
           className="flex-1 w-full bg-gradient-to-r from-primary to-secondary text-white shadow-lg font-medium"
           onClick={() => drawCard()}
           disabled={isDisabled}
-          size="lg"
+          size={isMobile ? "default" : "lg"}
         >
           <Dices className="mr-2" />
           Random
@@ -44,7 +51,7 @@ export const GameControls = () => {
           className="flex-1 btn-dare w-full shadow-lg shadow-game-dare/20 font-medium"
           onClick={() => drawCard('dare')}
           disabled={isDisabled}
-          size="lg"
+          size={isMobile ? "default" : "lg"}
         >
           <Flame className="mr-2" />
           Dare

@@ -8,7 +8,8 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { PackageOpen } from "lucide-react";
+import { PackageOpen, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const PackSelector = () => {
   const { packs, activePack, setActivePack } = useGame();
@@ -20,33 +21,37 @@ export const PackSelector = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex items-center gap-2 mb-3">
-        <PackageOpen className="text-primary" />
-        <h2 className="text-lg font-medium text-white">Select a Card Pack</h2>
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <div className="flex items-center gap-2">
+          <PackageOpen className="text-primary" />
+          <h2 className="text-lg font-medium text-white">Current Pack</h2>
+        </div>
+        
+        <Link to="/packs">
+          <motion.div
+            className="flex items-center gap-1 text-white/70 hover:text-white text-sm"
+            whileHover={{ x: -3 }}
+          >
+            <ArrowLeft size={16} />
+            <span>Change</span>
+          </motion.div>
+        </Link>
       </div>
       
-      <Select onValueChange={setActivePack} value={activePack?.id}>
-        <SelectTrigger className="bg-black/30 border-white/20 text-white backdrop-blur-md">
-          <SelectValue placeholder="Select a pack" />
-        </SelectTrigger>
-        <SelectContent className="bg-background/90 backdrop-blur-md border-white/20">
-          {packs.map((pack: Pack) => (
-            <SelectItem key={pack.id} value={pack.id}>
-              {pack.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      
       {activePack && (
-        <motion.p 
-          className="mt-2 text-white/70 text-sm"
+        <motion.div 
+          className="p-3 rounded-lg bg-black/30 border border-white/10 backdrop-blur-md"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           transition={{ duration: 0.3 }}
         >
-          {activePack.description}
-        </motion.p>
+          <h3 className="font-medium text-lg text-white">
+            {activePack.name}
+          </h3>
+          <p className="mt-1 text-white/70 text-sm">
+            {activePack.description}
+          </p>
+        </motion.div>
       )}
     </motion.div>
   );

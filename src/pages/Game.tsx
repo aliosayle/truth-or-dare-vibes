@@ -45,6 +45,9 @@ const Game = () => {
       <div className="gradient-orb" style={{ top: '10%', left: '10%' }}></div>
       <div className="gradient-orb" style={{ bottom: '10%', right: '10%', animationDelay: '-5s' }}></div>
       
+      {/* Lebanese theme - subtle cedar outline */}
+      <div className="fixed bottom-0 left-0 w-full h-16 bg-[url('/cedar-silhouette.png')] bg-repeat-x bg-bottom opacity-10 pointer-events-none"></div>
+      
       <Navbar />
       
       <main className="flex-1 container mx-auto px-4 py-4 flex flex-col items-center justify-center">
@@ -65,7 +68,7 @@ const Game = () => {
                 >
                   <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary/30 px-4 py-2 rounded-full">
                     <Sparkles className="text-yellow-300 h-4 w-4" />
-                    <span className="text-white text-sm">You've got this, Lana! 💖</span>
+                    <span className="text-white text-sm">Yalla Lana, you've got this! 💖</span>
                   </div>
                 </motion.div>
               )}
@@ -79,7 +82,7 @@ const Game = () => {
           <div className="mt-8 w-full flex flex-col items-center">
             <GameControls />
             
-            {/* Phrase that changes with card type */}
+            {/* Lebanese phrase that changes with card type */}
             {currentCard && (
               <motion.div 
                 className="mt-4 text-center text-white/60 text-sm"
@@ -88,8 +91,8 @@ const Game = () => {
                 transition={{ delay: 1 }}
               >
                 {currentCard.type === 'truth' ? 
-                  '"Truth always reveals itself, nothing stays hidden forever."' :
-                  '"Go with the flow and honor your promise!"'}
+                  '"El 7a2i2a btekshaf metel el ze3t, ma fi shi bi dal mkhaba." (Truth reveals like oil, nothing stays hidden.)' :
+                  '"Jawwa jawwak w tekram 3enak!" (Go with the flow and honor your promise!)'}
               </motion.div>
             )}
           </div>
@@ -103,7 +106,7 @@ const Game = () => {
           transition={{ delay: 1, duration: 1 }}
           className="text-xs"
         >
-          Truth or Dare — A fun game with friends
+          Yalla, chabna! 🇱🇧 — Truth or Dare with a Lebanese twist
         </motion.p>
       </footer>
     </div>

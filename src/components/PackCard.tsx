@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, PackageOpen } from "lucide-react";
 import { Pack } from "@/contexts/GameContext";
 
-// Custom icon for theme
+// Custom Cedar icon for Lebanese theme
 const CedarIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -35,9 +35,9 @@ export const PackCard = ({ pack, onSelect }: PackCardProps) => {
   const truthCount = cards.filter(card => card.type === 'truth').length;
   const dareCount = cards.filter(card => card.type === 'dare').length;
 
-  // Theme colors
-  const accentColor = "from-primary/25 to-primary/10";
-  const borderColor = "border-white/20";
+  // Lebanese flag colors
+  const lebanonRedColor = "from-red-600/25 to-red-600/10";
+  const lebanonWhiteColor = "border-white/20";
   
   // Easter egg - if pack name or description includes "lana" (case insensitive)
   const hasLanaEasterEgg = 
@@ -54,12 +54,12 @@ export const PackCard = ({ pack, onSelect }: PackCardProps) => {
       whileTap={{ scale: 0.98 }}
       onClick={onSelect}
     >
-      {/* Top accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-primary/70 z-10"></div>
+      {/* Lebanese flag-inspired top accent bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-white to-green-600 z-10"></div>
       
-      <div className={`bg-gradient-to-br ${accentColor} rounded-xl p-5 h-full ${borderColor} backdrop-blur-sm hover:shadow-lg hover:shadow-primary/20 transition-all`}>
+      <div className={`bg-gradient-to-br ${lebanonRedColor} rounded-xl p-5 h-full ${lebanonWhiteColor} backdrop-blur-sm hover:shadow-lg hover:shadow-red-600/20 transition-all`}>
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-primary/70 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-red-700 flex items-center justify-center">
             {/* 1 in 6 chance to show cedar instead of the regular icon - subtle variety */}
             {Math.random() > 0.833 ? (
               <CedarIcon />
@@ -79,18 +79,18 @@ export const PackCard = ({ pack, onSelect }: PackCardProps) => {
         <div className="flex justify-between items-center mt-4">
           <div className="flex gap-3">
             <span className="text-sm px-2.5 py-0.5 rounded-full bg-game-truth/30 text-game-truth">
-              {truthCount} {truthCount === 1 ? "Truth" : "Truths"}
+              {truthCount} {truthCount === 1 ? "7a2i2a" : "7a2ayek"}
             </span>
             <span className="text-sm px-2.5 py-0.5 rounded-full bg-game-dare/30 text-game-dare">
-              {dareCount} {dareCount === 1 ? "Dare" : "Dares"}
+              {dareCount} {dareCount === 1 ? "Jara2a" : "Jara2ét"}
             </span>
           </div>
           
           <motion.div 
-            className="bg-primary/20 rounded-full p-1.5"
+            className="bg-red-600/20 rounded-full p-1.5"
             whileHover={{ x: 3 }}
           >
-            <ArrowRight size={18} className="text-primary/80" />
+            <ArrowRight size={18} className="text-red-400" />
           </motion.div>
         </div>
       </div>

@@ -2,11 +2,10 @@
   "name": "truth-or-dare-server",
   "version": "1.0.0",
   "description": "Backend server for Truth or Dare game",
-  "main": "src/index.ts",
+  "main": "index.ts",
   "scripts": {
-    "start": "tsx src/index.ts",
-    "dev": "nodemon --exec tsx src/index.ts",
-    "init-db": "tsx src/init.ts"
+    "start": "tsx index.ts",
+    "dev": "nodemon --exec tsx index.ts"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

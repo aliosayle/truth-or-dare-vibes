@@ -60,34 +60,53 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     console.log('Login attempt with body:', JSON.stringify(req.body));
-    const { email, password } = req.body;
+    console.log('Headers:', JSON.stringify(req.headers, null, 2));
+    
+    // Check what fields are received
+    const { username, email, password } = req.body;
+    console.log('Extracted fields:', { username, email, password: password ? '[REDACTED]' : undefined });
 
-    if (!email || !password) {
-      console.log('Missing email or password in request body');
-      return res.status(400).json({ message: 'Email and password are required' });
+    // Validate required fields - try both email and username
+    if ((!email && !username) || !password) {
+      console.log('Missing login credentials in request body');
+      return res.status(400).json({ 
+        message: 'Login credentials and password are required',
+        received: { 
+          hasEmail: !!email, 
+          hasUsername: !!username, 
+          hasPassword: !!password 
+        }
+      });
     }
 
-    // Find user
-    console.log('Searching for user with email:', email);
+    // Find user by email or username
+    console.log('Searching for user with email or username');
     const [users] = await pool.query(
-      'SELECT * FROM users WHERE email = ?',
-      [email]
+      'SELECT * FROM users WHERE email = ? OR username = ?',
+      [email || '', username || '']
     );
 
     if ((users as any[]).length === 0) {
-      console.log('No user found with email:', email);
+      console.log('No user found with provided credentials');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const user = (users as any[])[0];
-    console.log('User found:', { id: user.id, email: user.email, type: user.type });
+    console.log('User found:', { 
+      id: user.id, 
+      username: user.username,
+      email: user.email, 
+      type: user.type,
+      matchedByUsername: user.username === username,
+      matchedByEmail: user.email === email
+    });
 
     // Check password
     const isValidPassword = await bcrypt.compare(password, user.password);
     console.log('Password validation result:', isValidPassword);
     
     if (!isValidPassword) {
-      console.log('Invalid password for user:', email);
+      console.log('Invalid password for user:', user.email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
@@ -101,7 +120,7 @@ export const login = async (req: Request, res: Response) => {
     // Remove password from user object
     const { password: _, ...userWithoutPassword } = user;
 
-    console.log('Login successful for:', email);
+    console.log('Login successful for user:', { id: user.id, email: user.email, username: user.username });
     res.json({
       message: 'Login successful',
       user: userWithoutPassword,

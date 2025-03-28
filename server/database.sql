@@ -77,7 +77,7 @@ INSERT INTO cards (content, type, pack_id, created_by) VALUES
 
 -- Cards for Pack 2: Party Game
 INSERT INTO cards (content, type, pack_id, created_by) VALUES
-('What is the craziest thing you've ever done?', 'truth', @pack2_id, @admin_id),
+('What is the craziest thing you''ve ever done?', 'truth', @pack2_id, @admin_id),
 ('Have you ever pretended to be sick to avoid an event?', 'truth', @pack2_id, @admin_id),
 ('What is your most unusual talent?', 'truth', @pack2_id, @admin_id),
 ('Do a handstand against the wall', 'dare', @pack2_id, @admin_id),

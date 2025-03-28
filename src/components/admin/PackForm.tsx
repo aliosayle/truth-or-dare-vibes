@@ -24,21 +24,21 @@ export const PackForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 glass-panel p-6 border-l-4 border-red-600">
+    <form onSubmit={handleSubmit} className="space-y-4 glass-panel p-6 border-l-4 border-primary">
       <div className="flex items-center gap-2">
-        <Flag className="text-red-600" size={20} />
-        <h2 className="text-xl font-bold">Create New Lebanese Pack</h2>
+        <Flag className="text-primary" size={20} />
+        <h2 className="text-xl font-bold">Ballech new pack ya bro</h2>
       </div>
       
       <div className="space-y-2">
         <label htmlFor="packName" className="text-sm text-white/70">
-          Lebanese Pack Name
+          Pack Name
         </label>
         <Input
           id="packName"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. Lebanese Traditions & Customs"
+          placeholder="e.g. Fun with friends"
           className="bg-black/30 border-white/20"
           required
         />
@@ -52,13 +52,13 @@ export const PackForm = () => {
           id="packDescription"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="e.g. Questions and dares about Lebanese culture, traditions, and everyday life in Lebanon"
+          placeholder="Ekteb yalla, la tinse el harf!"
           className="bg-black/30 border-white/20"
         />
       </div>
       
-      <Button type="submit" className="w-full bg-gradient-to-r from-red-600 to-red-700">
-        <Plus className="mr-2 h-4 w-4" /> Create Lebanese Pack
+      <Button type="submit" className="w-full">
+        <Plus className="mr-2 h-4 w-4" /> Yalla Create
       </Button>
     </form>
   );

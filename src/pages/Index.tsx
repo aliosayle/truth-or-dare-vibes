@@ -4,7 +4,7 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Flame, Dices, Flag } from 'lucide-react';
+import { Dices, Flag } from 'lucide-react';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -36,14 +36,14 @@ const Index = () => {
             transition={{ delay: 0.3, duration: 0.8 }}
           >
             <div className="flex items-center justify-center gap-2 mb-3">
-              <Flag className="h-8 w-8 text-red-600" />
-              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-red-600 to-white bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(225,29,72,0.5)]">
-                Lebanese Truth or Dare
+              <Flag className="h-8 w-8 text-primary" />
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-white bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(255,29,72,0.5)]">
+                Truth or Dare 🇱🇧
               </h1>
             </div>
             
             <p className="text-white/70 max-w-md mx-auto text-lg mb-8">
-              The ultimate Lebanese party game to spice up your gatherings with a touch of Lebanon!
+              Yalla, bala ma tkhaaf! The ultimate party game with a Lebanese twist!
             </p>
             
             <motion.div 
@@ -53,30 +53,30 @@ const Index = () => {
             >
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-red-600 to-red-700 hover:opacity-90 text-white rounded-full px-8" 
+                className="rounded-full px-8" 
                 onClick={startGame}
               >
                 <Dices className="mr-2" />
-                Start Playing Now
+                Wlek, yalla n2ashe!
               </Button>
             </motion.div>
           </motion.div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
             <FeatureCard 
-              icon={<Flag className="text-red-600 h-8 w-8" />}
-              title="Lebanese Card Packs"
-              description="Choose from various Lebanese-themed card packs for authentic fun."
+              icon={<Flag className="text-primary h-8 w-8" />}
+              title="Exciting Packs"
+              description="Ma btet7adda? Choose from various themed card packs for authentic fun."
             />
             <FeatureCard 
               icon={<Flame className="text-game-dare h-8 w-8" />}
-              title="Lebanese Dares"
-              description="Exciting dares with a Lebanese twist to get the party going."
+              title="La2weseh ya jame3a!"
+              description="Exciting dares to get the party going and create memorable moments."
             />
             <FeatureCard 
               icon={<MessageIcon />}
-              title="Lebanese Truths"
-              description="Discover more about your friends with Lebanese culture-inspired questions."
+              title="El 7a2 y2al!"
+              description="Fash el khele2! Discover more about your friends with revealing questions."
             />
           </div>
         </motion.div>
@@ -88,7 +88,7 @@ const Index = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 1 }}
         >
-          Lebanese Truth or Dare 🇱🇧 — Get your Lebanese party started!
+          Kel se3a w ela w2ta! 🇱🇧 — Every moment has its time!
         </motion.p>
       </footer>
     </div>
@@ -98,7 +98,7 @@ const Index = () => {
 // Helper components
 const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
   <motion.div 
-    className="p-5 rounded-xl bg-black/30 backdrop-blur-sm border border-red-600/30"
+    className="p-5 rounded-xl bg-black/30 backdrop-blur-sm border border-white/10"
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay: 0.5 }}

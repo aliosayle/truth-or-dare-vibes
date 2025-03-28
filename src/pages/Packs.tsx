@@ -38,13 +38,13 @@ const Packs = () => {
             transition={{ delay: 0.3, duration: 0.8 }}
           >
             <div className="flex items-center justify-center gap-2 mb-3">
-              <Flag className="h-6 w-6 text-red-600" />
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-600 to-white bg-clip-text text-transparent mb-3 drop-shadow-[0_0_15px_rgba(225,29,72,0.5)]">
-                Lebanese Card Packs
+              <Flag className="h-6 w-6 text-primary" />
+              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-white bg-clip-text text-transparent mb-3 drop-shadow-[0_0_15px_rgba(225,29,72,0.5)]">
+                Choose a Pack
               </h1>
             </div>
             <p className="text-white/70 max-w-md mx-auto text-lg">
-              Choose a Lebanese card pack to start playing!
+              Wlak, sa7 el doura 3leik! Pick a pack to start playing!
             </p>
           </motion.div>
           
@@ -66,7 +66,7 @@ const Packs = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 1 }}
         >
-          Lebanese Truth or Dare 🇱🇧 — Enjoy Lebanese party vibes!
+          Tmat3na w kifayna! 🇱🇧 — We'll have fun, that's for sure!
         </motion.p>
       </footer>
     </div>

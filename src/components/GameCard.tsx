@@ -18,13 +18,14 @@ export const GameCard = ({ card, isRevealed = true }: GameCardProps) => {
         className="w-full max-w-md aspect-[3/4] rounded-2xl glass-panel flex items-center justify-center p-8 text-center"
       >
         <p className="text-white/70 text-lg">
-          Select a pack and draw a card to start playing!
+          Ma btet7adda? Choose a pack and draw a card to start!
         </p>
       </motion.div>
     );
   }
 
   const isCardTruth = card.type === 'truth';
+  const cardTypeLabel = isCardTruth ? "El 7a2" : "Tarre2a";
 
   return (
     <AnimatePresence mode="wait">
@@ -98,7 +99,7 @@ export const GameCard = ({ card, isRevealed = true }: GameCardProps) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            {card.type}
+            {cardTypeLabel}
           </motion.div>
         </div>
       </motion.div>

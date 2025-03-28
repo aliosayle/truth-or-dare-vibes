@@ -33,7 +33,7 @@ export const GameControls = () => {
           ) : (
             <>
               <MessageCircleQuestion className="mr-2" />
-              Truth
+              El 7a2
             </>
           )}
         </Button>
@@ -51,7 +51,7 @@ export const GameControls = () => {
           ) : (
             <>
               <Dices className="mr-2" />
-              Random
+              Yalla
             </>
           )}
         </Button>
@@ -69,7 +69,7 @@ export const GameControls = () => {
           ) : (
             <>
               <Flame className="mr-2" />
-              Dare
+              Jarreb
             </>
           )}
         </Button>

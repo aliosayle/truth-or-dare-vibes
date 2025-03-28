@@ -58,6 +58,11 @@ const config = {
           card: "#1c0e30",
           truth: "#3b82f6",
           dare: "#ec4899"
+        },
+        lebanese: {
+          red: "#EF233C",
+          white: "#ffffff",
+          cedar: "#00A859"
         }
       },
       borderRadius: {

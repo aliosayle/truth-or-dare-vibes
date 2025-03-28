@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useGame } from "@/contexts/GameContext";
-import { Plus } from "lucide-react";
+import { Plus, Flag } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 export const PackForm = () => {
@@ -24,18 +24,21 @@ export const PackForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 glass-panel p-6">
-      <h2 className="text-xl font-bold">Create New Lebanese Pack</h2>
+    <form onSubmit={handleSubmit} className="space-y-4 glass-panel p-6 border-l-4 border-red-600">
+      <div className="flex items-center gap-2">
+        <Flag className="text-red-600" size={20} />
+        <h2 className="text-xl font-bold">Create New Lebanese Pack</h2>
+      </div>
       
       <div className="space-y-2">
         <label htmlFor="packName" className="text-sm text-white/70">
-          Pack Name
+          Lebanese Pack Name
         </label>
         <Input
           id="packName"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. Lebanese Traditions"
+          placeholder="e.g. Lebanese Traditions & Customs"
           className="bg-black/30 border-white/20"
           required
         />
@@ -49,13 +52,13 @@ export const PackForm = () => {
           id="packDescription"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="e.g. Questions and dares about Lebanese culture and traditions"
+          placeholder="e.g. Questions and dares about Lebanese culture, traditions, and everyday life in Lebanon"
           className="bg-black/30 border-white/20"
         />
       </div>
       
-      <Button type="submit" className="w-full">
-        <Plus className="mr-2 h-4 w-4" /> Create Pack
+      <Button type="submit" className="w-full bg-gradient-to-r from-red-600 to-red-700">
+        <Plus className="mr-2 h-4 w-4" /> Create Lebanese Pack
       </Button>
     </form>
   );

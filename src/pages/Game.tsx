@@ -55,7 +55,7 @@ const Game = () => {
           transition={{ delay: 1, duration: 1 }}
           className="text-xs"
         >
-          Lebanese Truth or Dare 🇱🇧
+          Lebanese Truth or Dare 🇱🇧 — Bringing Lebanese Fun To Your Gatherings
         </motion.p>
       </footer>
     </div>

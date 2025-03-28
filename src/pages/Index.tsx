@@ -4,7 +4,7 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Flame, Dices } from 'lucide-react';
+import { Flame, Dices, Flag } from 'lucide-react';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -35,11 +35,15 @@ const Index = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4 drop-shadow-[0_0_15px_rgba(155,135,245,0.5)]">
-              Truth or Dare Vibes
-            </h1>
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <Flag className="h-8 w-8 text-red-600" />
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-red-600 to-white bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(225,29,72,0.5)]">
+                Lebanese Truth or Dare
+              </h1>
+            </div>
+            
             <p className="text-white/70 max-w-md mx-auto text-lg mb-8">
-              The ultimate party game to spice up your gatherings!
+              The ultimate Lebanese party game to spice up your gatherings with a touch of Lebanon!
             </p>
             
             <motion.div 
@@ -49,7 +53,7 @@ const Index = () => {
             >
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-white rounded-full px-8" 
+                className="bg-gradient-to-r from-red-600 to-red-700 hover:opacity-90 text-white rounded-full px-8" 
                 onClick={startGame}
               >
                 <Dices className="mr-2" />
@@ -60,19 +64,19 @@ const Index = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
             <FeatureCard 
-              icon={<Dices className="text-primary h-8 w-8" />}
-              title="Multiple Card Packs"
-              description="Choose from various themed card packs for different occasions."
+              icon={<Flag className="text-red-600 h-8 w-8" />}
+              title="Lebanese Card Packs"
+              description="Choose from various Lebanese-themed card packs for authentic fun."
             />
             <FeatureCard 
               icon={<Flame className="text-game-dare h-8 w-8" />}
-              title="Exciting Dares"
-              description="Get the party going with fun and exciting dares for everyone."
+              title="Lebanese Dares"
+              description="Exciting dares with a Lebanese twist to get the party going."
             />
             <FeatureCard 
               icon={<MessageIcon />}
-              title="Revealing Truths"
-              description="Learn more about your friends with thought-provoking questions."
+              title="Lebanese Truths"
+              description="Discover more about your friends with Lebanese culture-inspired questions."
             />
           </div>
         </motion.div>
@@ -84,7 +88,7 @@ const Index = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 1 }}
         >
-          Truth or Dare Vibes 🔥 — Get the party started!
+          Lebanese Truth or Dare 🇱🇧 — Get your Lebanese party started!
         </motion.p>
       </footer>
     </div>
@@ -94,7 +98,7 @@ const Index = () => {
 // Helper components
 const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
   <motion.div 
-    className="p-5 rounded-xl bg-black/30 backdrop-blur-sm border border-white/10"
+    className="p-5 rounded-xl bg-black/30 backdrop-blur-sm border border-red-600/30"
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay: 0.5 }}

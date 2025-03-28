@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, PackageOpen } from "lucide-react";
 import { Pack } from "@/contexts/GameContext";
 
-// Custom Cedar icon for theme
+// Custom icon for theme
 const CedarIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ export const PackCard = ({ pack, onSelect }: PackCardProps) => {
   const dareCount = cards.filter(card => card.type === 'dare').length;
 
   // Theme colors
-  const accentColor = "from-red-600/25 to-red-600/10";
+  const accentColor = "from-primary/25 to-primary/10";
   const borderColor = "border-white/20";
   
   // Easter egg - if pack name or description includes "lana" (case insensitive)
@@ -55,11 +55,11 @@ export const PackCard = ({ pack, onSelect }: PackCardProps) => {
       onClick={onSelect}
     >
       {/* Top accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/50 to-primary/20 z-10"></div>
+      <div className="absolute top-0 left-0 right-0 h-1 bg-primary/70 z-10"></div>
       
-      <div className={`bg-gradient-to-br ${accentColor} rounded-xl p-5 h-full ${borderColor} backdrop-blur-sm hover:shadow-lg hover:shadow-red-600/20 transition-all`}>
+      <div className={`bg-gradient-to-br ${accentColor} rounded-xl p-5 h-full ${borderColor} backdrop-blur-sm hover:shadow-lg hover:shadow-primary/20 transition-all`}>
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-red-700 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-primary/70 flex items-center justify-center">
             {/* 1 in 6 chance to show cedar instead of the regular icon - subtle variety */}
             {Math.random() > 0.833 ? (
               <CedarIcon />
@@ -87,10 +87,10 @@ export const PackCard = ({ pack, onSelect }: PackCardProps) => {
           </div>
           
           <motion.div 
-            className="bg-red-600/20 rounded-full p-1.5"
+            className="bg-primary/20 rounded-full p-1.5"
             whileHover={{ x: 3 }}
           >
-            <ArrowRight size={18} className="text-red-400" />
+            <ArrowRight size={18} className="text-primary/80" />
           </motion.div>
         </div>
       </div>

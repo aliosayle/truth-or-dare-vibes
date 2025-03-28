@@ -1,20 +1,18 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import apiService from '../lib/api';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from "sonner";
+import { authApi } from '../lib/api';
 
-export type UserType = 'admin' | 'premium' | 'normal';
-
-export interface User {
+interface User {
   id: string;
   username: string;
   email: string;
-  type: UserType;
-  created_at: string;
+  type: 'admin' | 'premium' | 'normal';
 }
 
 interface AuthResponse {
-  token: string;
   user: User;
-  message?: string;
+  token: string;
+  message: string;
 }
 
 interface AuthContextType {
@@ -22,105 +20,78 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string, type?: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check if user is already logged in
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchCurrentUser();
-    } else {
-      setLoading(false);
-    }
-  }, []);
+    const initAuth = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (token) {
+          const userData = await authApi.getCurrentUser() as User;
+          setUser(userData);
+        }
+      } catch (err) {
+        console.error('Error initializing auth:', err);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchCurrentUser = async () => {
-    try {
-      setLoading(true);
-      const userData = await apiService.getCurrentUser() as User;
-      setUser(userData);
-      setIsAuthenticated(true);
-    } catch (err) {
-      console.error('Failed to fetch current user:', err);
-      localStorage.removeItem('token');
-      setIsAuthenticated(false);
-    } finally {
-      setLoading(false);
-    }
-  };
+    initAuth();
+  }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      setLoading(true);
       setError(null);
-      const response = await apiService.login(email, password) as AuthResponse;
-      
-      // Store token
-      localStorage.setItem('token', response.token);
-      
-      // Set user and auth state
-      setUser(response.user);
-      setIsAuthenticated(true);
+      const data = await authApi.login(email, password) as AuthResponse;
+      setUser(data.user);
     } catch (err: any) {
-      setError(apiService.handleError(err));
+      setError(err.response?.data?.message || 'Login failed');
       throw err;
-    } finally {
-      setLoading(false);
     }
   };
 
-  const register = async (username: string, email: string, password: string) => {
+  const register = async (username: string, email: string, password: string, type?: string) => {
     try {
-      setLoading(true);
       setError(null);
-      const response = await apiService.register(username, email, password) as AuthResponse;
-      
-      // Store token
-      localStorage.setItem('token', response.token);
-      
-      // Set user and auth state
-      setUser(response.user);
-      setIsAuthenticated(true);
+      const data = await authApi.register(username, email, password, type) as AuthResponse;
+      setUser(data.user);
     } catch (err: any) {
-      setError(apiService.handleError(err));
+      setError(err.response?.data?.message || 'Registration failed');
       throw err;
-    } finally {
-      setLoading(false);
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    authApi.logout();
     setUser(null);
-    setIsAuthenticated(false);
   };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        error,
-        login,
-        register,
-        logout,
-        isAuthenticated,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    loading,
+    error,
+    login,
+    register,
+    logout,
+    isAuthenticated: !!user,
+    isAdmin: user?.type === 'admin',
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

@@ -1,251 +1,144 @@
-# Welcome to your Lovable project
-
-## Project info
-
-**URL**: https://lovable.dev/projects/6c8cf826-95b6-4d27-b87d-1297725bef6d
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/6c8cf826-95b6-4d27-b87d-1297725bef6d) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/6c8cf826-95b6-4d27-b87d-1297725bef6d) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
-
 # Truth or Dare Game
 
-A modern web application for playing Truth or Dare with friends, featuring themed card packs and a cultural twist!
+A fun, interactive Truth or Dare game built with React, TypeScript, and MySQL.
 
 ## Features
 
-- User authentication (admin, premium, and normal users)
-- Browse and play with different card packs
+- Browse different packs of Truth or Dare cards
+- Play the game with friends
 - Admin panel for managing packs and cards
-- Mobile-friendly design
-- RESTful API backend with PostgreSQL database
+- User authentication (admin, premium, normal users)
 
-## Tech Stack
+## Local Development Setup
 
-- **Frontend**: React, TypeScript, TailwindCSS, Framer Motion
-- **Backend**: Node.js, Express, PostgreSQL
-- **Authentication**: JWT
+### Prerequisites
+
+- Node.js and npm
+- MySQL server running on localhost
+- MySQL user: `root` with password: `goldfish`
+
+### Quick Setup
+
+Run the setup script:
+
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+This will:
+1. Create the required database
+2. Import the schema and initial data
+3. Install dependencies for the frontend and backend
+
+### Manual Setup
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd truth-or-dare-vibes
+```
+
+2. Set up the database:
+```bash
+# Log into MySQL
+mysql -u root -p'goldfish'
+
+# Create the database
+CREATE DATABASE truth_or_dare;
+USE truth_or_dare;
+
+# Exit MySQL
+exit
+
+# Import the schema
+mysql -u root -p'goldfish' < server/database.sql
+```
+
+3. Install dependencies and start development servers:
+```bash
+# Install frontend dependencies
+npm install
+
+# Install backend dependencies
+cd server
+npm install
+npm run build
+npm run dev
+
+# In a new terminal, start the frontend
+cd ..
+npm run dev
+```
 
 ## Deployment
 
-### Local Development
+To deploy to the remote server:
 
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   cd truth-or-dare-vibes
-   ```
+1. Update the `GITHUB_REPO` in `deploy.sh` to your GitHub repository URL
+2. Make the script executable and run it:
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+This will:
+1. SSH into the remote server
+2. Install required dependencies
+3. Clone the repository
+4. Set up the database
+5. Configure services to run the application
+6. Set up Nginx as a reverse proxy (if installed)
+
+### Manual Server Setup
+
+If you prefer to set up the server manually:
+
+1. SSH into your server:
+```bash
+ssh root@161.97.177.233
+```
 
 2. Install dependencies:
-   ```
-   # Install frontend dependencies
-   npm install
-   
-   # Install backend dependencies
-   cd server
-   npm install
-   ```
-
-3. Set up the database:
-   ```
-   # Create PostgreSQL database
-   psql -U postgres
-   CREATE DATABASE truth_or_dare;
-   \q
-   
-   # Run the database initialization script
-   psql -U postgres -d truth_or_dare -f server/database.sql
-   ```
-
-4. Start the development servers:
-   ```
-   # Start backend server (from server directory)
-   npm run dev
-   
-   # In a separate terminal, start frontend (from project root)
-   npm run dev
-   ```
-
-### Remote Server Deployment (161.97.177.233)
-
-1. Connect to the server:
-   ```
-   ssh user@161.97.177.233
-   ```
-
-2. Clone the repository:
-   ```
-   git clone <repository-url>
-   cd truth-or-dare-vibes
-   ```
-
-3. Install dependencies:
-   ```
-   npm install
-   cd server
-   npm install
-   ```
-
-4. Set up the database:
-   ```
-   # Create PostgreSQL database
-   sudo -u postgres psql
-   CREATE DATABASE truth_or_dare;
-   \q
-   
-   # Run the database initialization script
-   sudo -u postgres psql -d truth_or_dare -f database.sql
-   ```
-
-5. Configure environment variables:
-   ```
-   # Create .env file in server directory
-   cat > .env << EOL
-   DB_USER=postgres
-   DB_PASSWORD=your_password
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_DATABASE=truth_or_dare
-   JWT_SECRET=your_jwt_secret
-   PORT=3001
-   EOL
-   ```
-
-6. Build the frontend:
-   ```
-   cd ..
-   npm run build
-   ```
-
-7. Set up PM2 for process management:
-   ```
-   # Install PM2 globally
-   npm install -g pm2
-   
-   # Start the backend server
-   cd server
-   pm2 start index.ts --name "truth-or-dare-backend" --interpreter ./node_modules/.bin/ts-node
-   
-   # Start the frontend server (from project root)
-   cd ..
-   pm2 start --name "truth-or-dare-frontend" -- npm run preview -- --host 0.0.0.0
-   ```
-
-8. Configure Nginx (optional):
-   ```
-   sudo nano /etc/nginx/sites-available/truth-or-dare
-   ```
-
-   Add the following configuration:
-   ```
-   server {
-       listen 80;
-       server_name 161.97.177.233;
-
-       location /api {
-           proxy_pass http://localhost:3001;
-           proxy_http_version 1.1;
-           proxy_set_header Upgrade $http_upgrade;
-           proxy_set_header Connection 'upgrade';
-           proxy_set_header Host $host;
-           proxy_cache_bypass $http_upgrade;
-       }
-
-       location / {
-           proxy_pass http://localhost:4173;
-           proxy_http_version 1.1;
-           proxy_set_header Upgrade $http_upgrade;
-           proxy_set_header Connection 'upgrade';
-           proxy_set_header Host $host;
-           proxy_cache_bypass $http_upgrade;
-       }
-   }
-   ```
-
-   Create a symlink and restart Nginx:
-   ```
-   sudo ln -s /etc/nginx/sites-available/truth-or-dare /etc/nginx/sites-enabled/
-   sudo nginx -t
-   sudo systemctl restart nginx
-   ```
-
-## Git Commands
-
+```bash
+apt-get update
+apt-get install -y git nodejs npm mysql-server
 ```
-# Add all changes
-git add .
 
-# Commit changes
-git commit -m "Update: Configure app for remote server deployment"
-
-# Push to GitHub
-git push origin main
+3. Clone the repository:
+```bash
+mkdir -p /var/www/truth-or-dare
+cd /var/www/truth-or-dare
+git clone <repository-url> .
 ```
+
+4. Set up MySQL:
+```bash
+mysql -u root -p'goldfish'
+CREATE DATABASE truth_or_dare;
+exit
+mysql -u root -p'goldfish' < /var/www/truth-or-dare/server/database.sql
+```
+
+5. Build and run the application:
+```bash
+# Frontend
+cd /var/www/truth-or-dare
+npm install
+npm run build
+
+# Backend
+cd /var/www/truth-or-dare/server
+npm install
+npm run build
+npm run start
+```
+
+## Default Login
+
+- Username: `admin`
+- Password: `admin123`
 
 ## Credits
 
-- UI template by [lovable.dev](https://lovable.dev)
-
-## License
-
-MIT
+- Template provided by [lovable.dev](https://lovable.dev)

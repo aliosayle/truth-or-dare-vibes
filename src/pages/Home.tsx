@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
-import { ChevronRight, DoorOpen, Sparkles, Package, Users, Star } from 'lucide-react';
+import { ChevronRight, Sparkles, Package, Users, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Home = () => {
@@ -30,9 +30,9 @@ const Home = () => {
               <div className="mb-2">
                 <Sparkles className="h-10 w-10 text-primary" />
               </div>
-              <h1 className="text-3xl font-bold mb-4">Ahlan wa Sahlan, {user?.username}!</h1>
-              <p className="text-xl mb-6 text-white/80">Welcome to a unique Truth or Dare experience!</p>
-              <p className="text-md mb-8 text-white/70">Get ready for a fun and exciting game with friends, featuring cards with cultural flair and tradition.</p>
+              <h1 className="text-3xl font-bold mb-4">Welcome, {user?.username}!</h1>
+              <p className="text-xl mb-6 text-white/80">Ready to play Truth or Dare?</p>
+              <p className="text-md mb-8 text-white/70">Get ready for a fun and exciting game with friends, featuring unique and entertaining challenges.</p>
               <Link 
                 to="/packs" 
                 className="bg-primary hover:bg-primary/80 text-white font-bold py-3 px-6 rounded-full flex items-center gap-2 transition-all"
@@ -89,12 +89,12 @@ const Home = () => {
             </div>
           </div>
           
-          {/* Cultural Theme */}
+          {/* Game Description */}
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 relative overflow-hidden mb-8">
-            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-primary/70 via-primary/40 to-primary/20"></div>
+            <div className="absolute top-0 left-0 w-2 h-full bg-primary/50"></div>
             <div className="pl-4">
-              <h3 className="font-bold text-xl mb-3">Cultural Twist</h3>
-              <p className="text-white/70">Discover truth or dare cards that celebrate cultural references, humor, and traditions. From dance challenges to food trivia, experience a game with an authentic cultural flavor!</p>
+              <h3 className="font-bold text-xl mb-3">Game Rules</h3>
+              <p className="text-white/70">Take turns answering truth questions or performing dares with friends. From dancing challenges to personal questions, experience a game with plenty of fun and laughs!</p>
             </div>
           </div>
         </motion.div>
@@ -102,7 +102,7 @@ const Home = () => {
       
       <footer className="py-3 text-center text-white/50">
         <p className="text-xs">
-          Yalla, chabna! — Truth or Dare with a twist
+          Truth or Dare — A fun game with friends
         </p>
       </footer>
     </div>

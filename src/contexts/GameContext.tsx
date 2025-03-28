@@ -29,7 +29,7 @@ const initialPacks: Pack[] = [
       { id: 't3', type: 'truth', content: 'What's the weirdest food combination you actually enjoy?', packId: 'p1' },
       { id: 'd1', type: 'dare', content: 'Text your crush or the last person you dated and tell them you miss their face', packId: 'p1' },
       { id: 'd2', type: 'dare', content: 'Do your best impression of another player', packId: 'p1' },
-      { id: 'd3', type: 'dare', content: 'Post a selfie with a funny caption on your social media', packId: 'p1' },
+      { id: 'd3', type: 'dare', content: 'Post a selfie with a funny caption on your social media', packId: 'p1' }
     ]
   },
   {
@@ -42,7 +42,7 @@ const initialPacks: Pack[] = [
       { id: 't6', type: 'truth', content: 'What's a secret you've never told anyone in this room?', packId: 'p2' },
       { id: 'd4', type: 'dare', content: 'Let the group browse your camera roll for 30 seconds', packId: 'p2' },
       { id: 'd5', type: 'dare', content: 'Call someone and sing them happy birthday, even if it's not their birthday', packId: 'p2' },
-      { id: 'd6', type: 'dare', content: 'Speak in an accent of the group's choosing until your next turn', packId: 'p2' },
+      { id: 'd6', type: 'dare', content: 'Speak in an accent of the group's choosing until your next turn', packId: 'p2' }
     ]
   }
 ];

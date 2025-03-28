@@ -9,6 +9,7 @@ import { GameProvider } from "@/contexts/GameContext";
 import Index from "./pages/Index";
 import Packs from "./pages/Packs";
 import Game from "./pages/Game";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/packs" element={<Packs />} />
               <Route path="/play/:packId" element={<Game />} />
+              <Route path="/admin" element={<Admin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -50,18 +50,18 @@ const Game = () => {
       
       <Navbar />
       
-      <main className="flex-1 container mx-auto px-4 py-4 flex flex-col items-center justify-center">
-        <div className="w-full max-w-4xl flex flex-col items-center">
+      <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center">
+        <div className="w-full max-w-4xl">
           <PackSelector />
           
           <div 
-            className="mt-8 flex justify-center w-full"
+            className="mt-8 relative"
             onClick={triggerEasterEgg}  
           >
             <AnimatePresence>
               {showLanaEasterEgg && (
                 <motion.div 
-                  className="absolute top-[25%] right-0 left-0 text-center z-10"
+                  className="absolute -top-12 right-0 left-0 text-center z-10"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -74,12 +74,10 @@ const Game = () => {
               )}
             </AnimatePresence>
             
-            <div className="w-full flex justify-center">
-              <GameCard />
-            </div>
+            <GameCard />
           </div>
           
-          <div className="mt-8 w-full flex flex-col items-center">
+          <div className="mt-8">
             <GameControls />
             
             {/* Lebanese phrase that changes with card type */}

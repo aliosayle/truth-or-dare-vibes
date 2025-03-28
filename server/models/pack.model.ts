@@ -23,19 +23,15 @@ class PackModel {
     try {
       console.log('Getting all packs...');
       const [rows] = await pool.query('SELECT * FROM packs');
+      console.log('Fetched packs:', rows);
       const packs = rows as Pack[];
-      console.log('Fetched packs:', packs);
       
       // Fetch cards for each pack
       for (const pack of packs) {
-        try {
-          console.log(`Fetching cards for pack ${pack.id}...`);
-          const [cards] = await pool.query('SELECT * FROM cards WHERE pack_id = ?', [pack.id]);
-          pack.cards = cards as Card[];
-        } catch (error) {
-          console.error(`Error fetching cards for pack ${pack.id}:`, error);
-          pack.cards = [];
-        }
+        console.log(`Fetching cards for pack ${pack.id}...`);
+        const [cards] = await pool.query('SELECT * FROM cards WHERE packId = ?', [pack.id]);
+        console.log(`Fetched ${(cards as any[]).length} cards for pack ${pack.id}`);
+        pack.cards = cards as Card[];
       }
       
       return packs;
@@ -58,7 +54,7 @@ class PackModel {
       
       // Fetch cards for the pack
       console.log(`Fetching cards for pack ${id}...`);
-      const [cards] = await pool.query('SELECT * FROM cards WHERE pack_id = ?', [id]);
+      const [cards] = await pool.query('SELECT * FROM cards WHERE packId = ?', [id]);
       console.log(`Fetched ${(cards as any[]).length} cards for pack ${id}`);
       pack.cards = cards as Card[];
       

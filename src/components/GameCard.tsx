@@ -65,15 +65,9 @@ export const GameCard = ({ card: propCard, isRevealed = true }: GameCardProps) =
 
         {/* Lebanese flag inspired accent in corner */}
         <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
-          <div className="absolute top-0 right-0 h-4 w-16 bg-red-600 opacity-50"></div>
-          <div className="absolute top-4 right-0 h-4 w-16 bg-white opacity-50">
-            <div className="absolute top-1 left-1/2 transform -translate-x-1/2 h-2 w-2 opacity-80">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="h-full w-full">
-                <path fill="currentColor" d="M442.8 182.4c0-88-76.6-159.4-170.8-159.4S101.2 94.4 101.2 182.4c0 15.6 5.4 24.4 5.4 24.4l20 17.7c-5.9-33.7 2.4-101.7 45.1-101.7 9 0 10 10.2 10.5 22.1.5 26-4.6 52.6 26.5 70.8 6.5 5.1 17.2 5.2 17.2 5.2l-12.5-66.3c9.4 4.7 68.1 6.1 68.1 6.1l-12.5 66.3s4.3-.7 9-2.4c22.9-8.7 38.9-24.7 46.9-59.7 3.3-14.2 8.9-42 40.8-42 40.9 0 47.1 67.5 41.1 101.3l20-17.7c.1 0 5.5-8.8 5.5-24.4z"/>
-              </svg>
-            </div>
-          </div>
-          <div className="absolute top-8 right-0 h-4 w-16 bg-green-600 opacity-50"></div>
+          <div className="absolute top-0 right-0 w-6 h-full bg-green-600 opacity-30"></div>
+          <div className="absolute top-0 right-6 w-6 h-full bg-white opacity-30"></div>
+          <div className="absolute top-0 right-12 w-6 h-full bg-red-600 opacity-30"></div>
         </div>
 
         {/* Glowing corner effect */}

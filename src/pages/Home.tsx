@@ -2,112 +2,106 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
-import { ChevronRight, DoorOpen, Sparkles, Package, Users, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ArrowRight, PackageOpen, Star } from 'lucide-react';
 
 const Home = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background to-background/90">
+    <div className="min-h-screen flex flex-col">
       {/* Background elements */}
       <div className="bg-stars"></div>
       <div className="gradient-orb" style={{ top: '10%', left: '10%' }}></div>
       <div className="gradient-orb" style={{ bottom: '10%', right: '10%', animationDelay: '-5s' }}></div>
       
+      {/* Lebanese cedar pattern overlay - subtle */}
+      <div className="fixed inset-0 bg-[url('/cedar-pattern.png')] opacity-5 pointer-events-none"></div>
+      
       <Navbar />
       
-      <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="w-full max-w-4xl"
-        >
-          {/* Hero Section */}
-          <div className="bg-gradient-to-br from-primary/20 to-primary/10 backdrop-blur-sm rounded-2xl p-8 mb-8 shadow-lg border border-white/10">
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-2">
-                <Sparkles className="h-10 w-10 text-primary" />
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <motion.div 
+            className="glass-panel p-6 mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <h1 className="text-2xl font-bold text-white">
+                  <span className="text-primary">Ahla w Sahla</span> {user?.username}!
+                </h1>
+                <p className="text-white/70">
+                  <span className="text-xs" title="Lana's special game">ل.ع - L.A</span> • {user?.type} user
+                </p>
               </div>
-              <h1 className="text-3xl font-bold mb-4">Ahlan wa Sahlan, {user?.username}!</h1>
-              <p className="text-xl mb-6 text-white/80">Welcome to Truth or Dare with a Lebanese twist!</p>
-              <p className="text-md mb-8 text-white/70">Get ready for a fun and exciting game with friends, featuring cards inspired by Lebanese culture and traditions.</p>
-              <Link 
-                to="/packs" 
-                className="bg-primary hover:bg-primary/80 text-white font-bold py-3 px-6 rounded-full flex items-center gap-2 transition-all"
+              <button 
+                onClick={logout}
+                className="btn-secondary text-sm"
               >
-                Start Playing Now <ChevronRight size={18} />
+                Logout
+              </button>
+            </div>
+            
+            <div className="mt-6">
+              <h2 className="text-xl font-semibold text-white mb-3">
+                Yalla, let's play some Truth or Dare! <span className="text-xs opacity-50">حبيبي</span>
+              </h2>
+              <p className="text-white/70 mb-4">
+                Ka2annak bi Beirut, browse our Lebanese-themed packs and start playing!
+              </p>
+              
+              <Link to="/packs" className="btn-primary flex items-center gap-2 w-fit">
+                <PackageOpen size={18} />
+                <span>Browse Packs</span>
+                <ArrowRight size={16} />
               </Link>
             </div>
-          </div>
+          </motion.div>
           
-          {/* Quick Action Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <Link to="/packs" className="group">
-              <motion.div 
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                className="bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/10 transition-all"
-              >
-                <Package className="h-8 w-8 text-primary mb-3" />
-                <h3 className="font-bold text-lg mb-2">Browse Packs</h3>
-                <p className="text-white/70 text-sm">Explore themed packs with unique truth or dare cards.</p>
-                <div className="mt-4 text-primary group-hover:translate-x-1 transition-transform">
-                  <ChevronRight size={16} />
-                </div>
-              </motion.div>
-            </Link>
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <div className="glass-panel p-4 hover:border-primary/40 transition-colors">
+              <h3 className="text-white font-medium flex items-center gap-2">
+                <Star className="h-4 w-4 text-primary" />
+                Game Rules
+              </h3>
+              <p className="text-white/70 text-sm mt-2">
+                Khallik jari2! Take turns answering truth questions or performing dares with friends.
+              </p>
+            </div>
             
-            {user?.type === 'admin' && (
-              <Link to="/admin" className="group">
-                <motion.div 
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  className="bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/10 transition-all"
-                >
-                  <Star className="h-8 w-8 text-yellow-500 mb-3" />
-                  <h3 className="font-bold text-lg mb-2">Admin Panel</h3>
-                  <p className="text-white/70 text-sm">Manage packs and cards as an administrator.</p>
-                  <div className="mt-4 text-primary group-hover:translate-x-1 transition-transform">
-                    <ChevronRight size={16} />
-                  </div>
-                </motion.div>
-              </Link>
-            )}
+            <div className="glass-panel p-4 hover:border-primary/40 transition-colors">
+              <h3 className="text-white font-medium flex items-center gap-2">
+                <Star className="h-4 w-4 text-primary" />
+                Lebanese Vibes
+              </h3>
+              <p className="text-white/70 text-sm mt-2">
+                Ma fi metla! Enjoy our uniquely Lebanese take on the classic game.
+              </p>
+            </div>
             
-            <div className="group">
-              <motion.div 
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                className="bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/10 transition-all"
-              >
-                <Users className="h-8 w-8 text-blue-400 mb-3" />
-                <h3 className="font-bold text-lg mb-2">How to Play</h3>
-                <p className="text-white/70 text-sm">Select a pack, gather friends, and take turns with truth or dare!</p>
-                <div className="mt-4 text-primary group-hover:translate-x-1 transition-transform">
-                  <ChevronRight size={16} />
-                </div>
-              </motion.div>
+            <div className="glass-panel p-4 hover:border-primary/40 transition-colors">
+              <h3 className="text-white font-medium flex items-center gap-2">
+                <Star className="h-4 w-4 text-primary" />
+                Special Surprise
+              </h3>
+              <p className="text-white/70 text-sm mt-2">
+                For <span className="font-semibold text-primary/80">L</span>ovely <span className="font-semibold text-primary/80">A</span>mazing <span className="font-semibold text-primary/80">N</span>oble <span className="font-semibold text-primary/80">A</span>dventurers only.
+              </p>
             </div>
-          </div>
-          
-          {/* Lebanese Theme */}
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 relative overflow-hidden mb-8">
-            <div className="absolute top-0 left-0 w-2 h-full flex flex-col">
-              <div className="bg-red-600 flex-1"></div>
-              <div className="bg-white flex-1"></div>
-              <div className="bg-green-600 flex-1"></div>
-            </div>
-            <div className="pl-4">
-              <h3 className="font-bold text-xl mb-3">Lebanese Inspired</h3>
-              <p className="text-white/70">Discover truth or dare cards that celebrate Lebanese culture, humor, and traditions. From dabke challenges to za'atar trivia, experience a game with authentic Lebanese flavor!</p>
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </main>
       
-      <footer className="py-3 text-center text-white/50">
-        <p className="text-xs">
-          Yalla, chabna! 🇱🇧 — Truth or Dare with a Lebanese twist
-        </p>
+      <footer className="py-4 text-center text-white/50 text-sm">
+        <p>"Tmattal ma tit3azab" – Have fun without suffering! 🇱🇧</p>
       </footer>
     </div>
   );

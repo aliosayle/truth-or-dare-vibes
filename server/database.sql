@@ -1,8 +1,12 @@
 -- Create database
-CREATE DATABASE IF NOT EXISTS truth_or_dare;
+CREATE DATABASE truth_or_dare;
 
 -- Connect to the database
 USE truth_or_dare;
+
+-- Create user types enum
+CREATE TYPE user_type AS ENUM ('admin', 'premium', 'normal');
+CREATE TYPE card_type AS ENUM ('truth', 'dare');
 
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
@@ -17,27 +21,51 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Create packs table
 CREATE TABLE IF NOT EXISTS packs (
-  id VARCHAR(36) PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
   created_by VARCHAR(36),
   FOREIGN KEY (created_by) REFERENCES users(id),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create cards table
 CREATE TABLE IF NOT EXISTS cards (
-  id VARCHAR(36) PRIMARY KEY,
-  type ENUM('truth', 'dare') NOT NULL,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  type card_type NOT NULL,
   content TEXT NOT NULL,
-  pack_id VARCHAR(36) NOT NULL,
+  pack_id UUID NOT NULL REFERENCES packs(id) ON DELETE CASCADE,
   created_by VARCHAR(36),
-  FOREIGN KEY (pack_id) REFERENCES packs(id) ON DELETE CASCADE,
   FOREIGN KEY (created_by) REFERENCES users(id),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Create function to update timestamps
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Create triggers for updating timestamps
+CREATE TRIGGER update_users_updated_at
+    BEFORE UPDATE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_packs_updated_at
+    BEFORE UPDATE ON packs
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_cards_updated_at
+    BEFORE UPDATE ON cards
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- Insert initial admin user (password: admin123)
 INSERT INTO users (id, username, email, password, type) VALUES (
@@ -48,8 +76,12 @@ INSERT INTO users (id, username, email, password, type) VALUES (
   'admin'
 );
 
--- Set variable for admin user
+-- Update existing packs to be created by admin
 SET @admin_id = (SELECT id FROM users WHERE email = 'admin@example.com');
+UPDATE packs SET created_by = @admin_id WHERE created_by IS NULL;
+
+-- Update existing cards to be created by admin
+UPDATE cards SET created_by = @admin_id WHERE created_by IS NULL;
 
 -- Insert initial packs
 INSERT INTO packs (id, name, description, created_by) VALUES
@@ -57,12 +89,8 @@ INSERT INTO packs (id, name, description, created_by) VALUES
 (UUID(), 'Beirut Nights', 'Fun challenges inspired by Lebanese nightlife and entertainment', @admin_id),
 (UUID(), 'Cedar Adventures', 'Questions and challenges about Lebanese landmarks and nature', @admin_id);
 
--- Set variable for packs
-SET @lebanese_culture_id = (SELECT id FROM packs WHERE name = 'Lebanese Culture');
-SET @beirut_nights_id = (SELECT id FROM packs WHERE name = 'Beirut Nights');
-SET @cedar_adventures_id = (SELECT id FROM packs WHERE name = 'Cedar Adventures');
-
 -- Insert cards for Lebanese Culture pack
+SET @lebanese_culture_id = (SELECT id FROM packs WHERE name = 'Lebanese Culture');
 INSERT INTO cards (id, type, content, pack_id, created_by) VALUES
 (UUID(), 'truth', 'What''s your favorite Lebanese dish and why?', @lebanese_culture_id, @admin_id),
 (UUID(), 'truth', 'Which Lebanese song brings back your fondest memories?', @lebanese_culture_id, @admin_id),
@@ -74,6 +102,7 @@ INSERT INTO cards (id, type, content, pack_id, created_by) VALUES
 (UUID(), 'dare', 'Call someone and greet them with ''Kifak/Kifik'' and have a short conversation in Lebanese', @lebanese_culture_id, @admin_id);
 
 -- Insert cards for Beirut Nights pack
+SET @beirut_nights_id = (SELECT id FROM packs WHERE name = 'Beirut Nights');
 INSERT INTO cards (id, type, content, pack_id, created_by) VALUES
 (UUID(), 'truth', 'What''s the most memorable night you''ve had in Beirut?', @beirut_nights_id, @admin_id),
 (UUID(), 'truth', 'Have you ever tried to impress someone with your Arabic?', @beirut_nights_id, @admin_id),
@@ -85,6 +114,7 @@ INSERT INTO cards (id, type, content, pack_id, created_by) VALUES
 (UUID(), 'dare', 'Text the last Lebanese person in your contacts and tell them you miss their country', @beirut_nights_id, @admin_id);
 
 -- Insert cards for Cedar Adventures pack
+SET @cedar_adventures_id = (SELECT id FROM packs WHERE name = 'Cedar Adventures');
 INSERT INTO cards (id, type, content, pack_id, created_by) VALUES
 (UUID(), 'truth', 'Would you rather spend a day at Jeita Grotto or hiking in the Cedars?', @cedar_adventures_id, @admin_id),
 (UUID(), 'truth', 'What''s your favorite Lebanese natural landmark?', @cedar_adventures_id, @admin_id),

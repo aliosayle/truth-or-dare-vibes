@@ -5,7 +5,7 @@ import path from 'path';
 // Load .env from root server directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-console.log('DB CONFIG LOADING from src/config/db.config.ts');
+console.log('DB CONFIG LOADING from src/config/db.ts');
 console.log('DB_HOST:', process.env.DB_HOST);
 console.log('DB_USER:', process.env.DB_USER);
 console.log('DB_NAME:', process.env.DB_NAME);
@@ -20,6 +20,6 @@ export const pool = mysql.createPool({
   queueLimit: 0
 });
 
-console.log('Database pool created in src/config/db.config.ts with HARDCODED host: 127.0.0.1');
+console.log('Database pool created in src/config/db.ts with HARDCODED host: 127.0.0.1');
 
 export default pool; 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Pack, Card } from '../contexts/GameContext';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = 'http://161.97.177.233:3001/api';
 
 interface User {
   id: string;

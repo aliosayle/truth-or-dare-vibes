@@ -43,9 +43,8 @@ const Login = () => {
   const testDirectLogin = async () => {
     try {
       console.log('Testing direct API call to login');
-      const API_URL = 'http://161.97.177.233:3001/api';
+      const API_URL = 'http://161.97.177.233:3005/api';
       const response = await axios.post(`${API_URL}/auth/login`, { 
-        username: email,
         email, 
         password 
       }, {

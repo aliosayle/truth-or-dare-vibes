@@ -7,9 +7,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 export const GameControls = () => {
   const { activePack, drawCard } = useGame();
-  const isDisabled = !activePack;
   const isMobile = useIsMobile();
-
+  
   // For mobile, we'll use a more compact layout
   const containerClass = isMobile
     ? "grid grid-cols-3 gap-2 w-full max-w-md"
@@ -26,7 +25,7 @@ export const GameControls = () => {
         <Button
           className="flex-1 btn-truth w-full shadow-lg shadow-game-truth/20 font-medium"
           onClick={() => drawCard('truth')}
-          disabled={isDisabled}
+          disabled={!activePack}
           size={isMobile ? "sm" : "lg"}
         >
           {isMobile ? (
@@ -44,7 +43,7 @@ export const GameControls = () => {
         <Button
           className="flex-1 w-full bg-gradient-to-r from-primary to-secondary text-white shadow-lg font-medium"
           onClick={() => drawCard()}
-          disabled={isDisabled}
+          disabled={!activePack}
           size={isMobile ? "sm" : "lg"}
         >
           {isMobile ? (
@@ -62,7 +61,7 @@ export const GameControls = () => {
         <Button
           className="flex-1 btn-dare w-full shadow-lg shadow-game-dare/20 font-medium"
           onClick={() => drawCard('dare')}
-          disabled={isDisabled}
+          disabled={!activePack}
           size={isMobile ? "sm" : "lg"}
         >
           {isMobile ? (

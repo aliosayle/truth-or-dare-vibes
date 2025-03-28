@@ -9,13 +9,14 @@ import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const Game = () => {
-  const { currentCard, setActivePack } = useGame();
+  const { currentCard, setActivePack, activePack } = useGame();
   const { packId } = useParams<{ packId: string }>();
   const navigate = useNavigate();
   
   useEffect(() => {
     // If a packId is provided in the URL, select that pack
     if (packId) {
+      console.log("Setting active pack:", packId);
       setActivePack(packId);
     } else {
       // If no packId, redirect to packs selection page
@@ -39,8 +40,6 @@ const Game = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Remove duplicate logo/heading from here */}
-          
           <div className="w-full flex flex-col items-center gap-4 md:gap-6">
             <PackSelector />
             <GameCard card={currentCard} isRevealed={true} />

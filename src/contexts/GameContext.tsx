@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { toast } from "sonner";
 
@@ -70,9 +71,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const pack = packs.find(p => p.id === packId) || null;
     setActivePackState(pack);
     setCurrentCard(null);
-    if (pack) {
-      toast.info(`Selected pack: ${pack.name}`);
-    }
   };
 
   const drawCard = (type?: 'truth' | 'dare') => {
@@ -92,7 +90,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     const randomCard = cards[Math.floor(Math.random() * cards.length)];
     setCurrentCard(randomCard);
-    // Removed toast notification for card type selection
   };
 
   const generateId = () => Math.random().toString(36).substring(2, 9);

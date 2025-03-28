@@ -34,7 +34,7 @@ export const CardForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 glass-panel p-6">
-      <h2 className="text-xl font-bold">Create New Card</h2>
+      <h2 className="text-xl font-bold">Create New Lebanese Card</h2>
       
       <div className="space-y-2">
         <label htmlFor="cardPack" className="text-sm text-white/70">
@@ -83,7 +83,7 @@ export const CardForm = () => {
           id="cardContent"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="What's your question or challenge?"
+          placeholder={type === "truth" ? "e.g. What's your favorite Lebanese dish?" : "e.g. Sing a verse from a famous Lebanese song"}
           className="bg-black/30 border-white/20"
           required
           rows={3}

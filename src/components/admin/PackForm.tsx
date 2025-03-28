@@ -25,7 +25,7 @@ export const PackForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 glass-panel p-6">
-      <h2 className="text-xl font-bold">Create New Pack</h2>
+      <h2 className="text-xl font-bold">Create New Lebanese Pack</h2>
       
       <div className="space-y-2">
         <label htmlFor="packName" className="text-sm text-white/70">
@@ -35,7 +35,7 @@ export const PackForm = () => {
           id="packName"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Enter pack name"
+          placeholder="e.g. Lebanese Traditions"
           className="bg-black/30 border-white/20"
           required
         />
@@ -49,7 +49,7 @@ export const PackForm = () => {
           id="packDescription"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter pack description"
+          placeholder="e.g. Questions and dares about Lebanese culture and traditions"
           className="bg-black/30 border-white/20"
         />
       </div>

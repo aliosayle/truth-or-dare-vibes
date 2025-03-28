@@ -13,6 +13,10 @@ export const PackCard = ({ pack, onSelect }: PackCardProps) => {
   const truthCount = pack.cards.filter(card => card.type === 'truth').length;
   const dareCount = pack.cards.filter(card => card.type === 'dare').length;
 
+  // Lebanon flag colors
+  const lebanonRedColor = "from-red-600/25 to-red-600/10";
+  const lebanonWhiteColor = "border-white/20";
+
   return (
     <motion.div 
       className="rounded-xl p-0.5 overflow-hidden cursor-pointer"
@@ -23,9 +27,9 @@ export const PackCard = ({ pack, onSelect }: PackCardProps) => {
       whileTap={{ scale: 0.98 }}
       onClick={onSelect}
     >
-      <div className="bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl p-5 h-full border border-white/10 backdrop-blur-sm hover:shadow-lg hover:shadow-primary/20 transition-all">
+      <div className={`bg-gradient-to-br ${lebanonRedColor} rounded-xl p-5 h-full ${lebanonWhiteColor} backdrop-blur-sm hover:shadow-lg hover:shadow-red-600/20 transition-all`}>
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-red-700 flex items-center justify-center">
             <PackageOpen className="text-white" size={20} />
           </div>
           <h3 className="text-xl font-semibold text-white">{pack.name}</h3>
@@ -44,10 +48,10 @@ export const PackCard = ({ pack, onSelect }: PackCardProps) => {
           </div>
           
           <motion.div 
-            className="bg-primary/20 rounded-full p-1.5"
+            className="bg-red-600/20 rounded-full p-1.5"
             whileHover={{ x: 3 }}
           >
-            <ArrowRight size={18} className="text-primary" />
+            <ArrowRight size={18} className="text-red-400" />
           </motion.div>
         </div>
       </div>

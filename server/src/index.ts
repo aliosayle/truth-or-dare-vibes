@@ -1,100 +1,102 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
+import mysql from 'mysql2';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 
-// Try to import routes with different possible paths
-let packRoutes, cardRoutes, authRoutes;
+// Import routes
+let authRoutes, packRoutes, cardRoutes;
 try {
-  // First try direct imports
-  packRoutes = require('./routes/pack.routes').default;
-  cardRoutes = require('./routes/card.routes').default;
-  authRoutes = require('./routes/auth.routes').default;
-} catch (e) {
+  authRoutes = require('../routes/auth').default;
+  packRoutes = require('../routes/packs').default;
+  cardRoutes = require('../routes/cards').default;
+} catch (error) {
   try {
-    // Then try without 'default'
-    packRoutes = require('./routes/pack.routes');
-    cardRoutes = require('./routes/card.routes');
-    authRoutes = require('./routes/auth.routes');
-  } catch (e) {
-    try {
-      // Try from parent directory
-      packRoutes = require('../routes/pack.routes');
-      cardRoutes = require('../routes/card.routes');
-      authRoutes = require('../routes/auth.routes');
-    } catch (e) {
-      console.error('Failed to import route files:', e);
-      // Use empty router as fallback
-      const router = express.Router();
-      packRoutes = router;
-      cardRoutes = router;
-      authRoutes = router;
-    }
+    authRoutes = require('./routes/auth').default;
+    packRoutes = require('./routes/packs').default;
+    cardRoutes = require('./routes/cards').default;
+  } catch (error) {
+    console.error('Error loading routes:', error);
+    throw new Error('Failed to load routes');
   }
 }
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001;
 
-// CORS configuration
-const corsOptions = {
-  origin: ['http://localhost:5173', 'http://161.97.177.233:5173', 'http://161.97.177.233', 'http://161.97.177.233:4173'],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  optionsSuccessStatus: 204
-};
+// Configure CORS
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:4173',
+  'http://161.97.177.233:5173',
+  'http://161.97.177.233:4173',
+  'http://161.97.177.233',
+];
 
-console.log('Setting up Express server...');
-console.log('CORS enabled for origins:', corsOptions.origin);
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      console.log(`CORS blocked for origin: ${origin}`);
+      return callback(null, false);
+    }
+    
+    console.log(`CORS allowed for origin: ${origin}`);
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+}));
 
-// Middleware
-app.use(cors(corsOptions));
-app.use(express.json());
+// Add preflight response for all routes
+app.options('*', cors());
 
-// Logging middleware
+// CORS debug middleware
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  console.log('Request Headers:', JSON.stringify(req.headers));
-  if (req.method !== 'GET') {
-    console.log('Request Body:', JSON.stringify(req.body));
-  }
+  const origin = req.headers.origin;
+  console.log(`Request from origin: ${origin}`);
+  console.log(`Request method: ${req.method}`);
+  console.log(`Request path: ${req.path}`);
   next();
 });
 
-// Routes
+// Middleware
+app.use(express.json());
+
+// Database connection
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASS || '',
+  database: process.env.DB_NAME || 'truth_or_dare'
+});
+
+connection.connect(err => {
+  if (err) {
+    console.error('Error connecting to the database:', err);
+    return;
+  }
+  console.log('Connected to the database');
+});
+
+// Health check route
+app.get('/', (req: Request, res: Response) => {
+  res.json({ message: 'Server is running' });
+});
+
+// Add routes
 app.use('/api/auth', authRoutes);
 app.use('/api/packs', packRoutes);
 app.use('/api/cards', cardRoutes);
 
-// Root route for testing
-app.get('/', (req, res) => {
-  res.json({ message: 'Truth or Dare API is running' });
-});
-
-// Error handling middleware
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('Server Error:', err.stack);
-  res.status(500).json({ message: 'Something went wrong!', error: err.message });
-});
-
 // Start server
-const server = app.listen(Number(port), '0.0.0.0', () => {
-  console.log(`Server is running on http://0.0.0.0:${port}`);
-  console.log('Available endpoints:');
-  console.log(`- GET    /                 (API health check)`);
-  console.log(`- POST   /api/auth/login   (Login)`);
-  console.log(`- POST   /api/auth/register (Register)`);
-  console.log(`- GET    /api/auth/me      (Get current user)`);
-  console.log(`- GET    /api/packs        (Get all packs)`);
-  console.log(`- GET    /api/cards        (Get all cards)`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
-// Handle shutdown gracefully
-process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received: closing HTTP server');
-  server.close(() => {
-    console.log('HTTP server closed');
-    process.exit(0);
-  });
-}); 
+export default app; 

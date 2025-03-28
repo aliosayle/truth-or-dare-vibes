@@ -1,17 +1,17 @@
 import axios from 'axios';
 import { Pack, Card } from '../contexts/GameContext';
 
+interface User {
+  id: number | string;
+  username: string;
+  email: string;
+  type?: string;
+}
+
 interface AuthResponse {
   message: string;
   user: User;
   token: string;
-}
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  type?: string;
 }
 
 const isDev = import.meta.env.DEV;
@@ -65,7 +65,7 @@ export const authApi = {
       throw error;
     }
   },
-  logout: () => {
+  logout: (): void => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   },
@@ -103,7 +103,7 @@ export const packsApi = {
       throw error;
     }
   },
-  createPack: async (packData: Partial<Pack>): Promise<Pack> => {
+  createPack: async (packData: Omit<Pack, 'id' | 'created_at' | 'updated_at' | 'cards'>): Promise<Pack> => {
     const response = await api.post<Pack>('/packs', packData);
     return response.data;
   },
@@ -118,7 +118,7 @@ export const packsApi = {
 
 // Cards API
 export const cardsApi = {
-  getCardsForPack: async (packId: number): Promise<Card[]> => {
+  getCardsForPack: async (packId: string | number): Promise<Card[]> => {
     try {
       const response = await api.get<Card[]>(`/packs/${packId}/cards`);
       return response.data;
@@ -126,6 +126,13 @@ export const cardsApi = {
       console.error(`Get cards for pack ${packId} error:`, error);
       throw error;
     }
+  },
+  createCard: async (cardData: Omit<Card, 'id' | 'created_at' | 'updated_at'>): Promise<Card> => {
+    const response = await api.post<Card>('/cards', cardData);
+    return response.data;
+  },
+  deleteCard: async (id: string): Promise<void> => {
+    await api.delete(`/cards/${id}`);
   }
 };
 

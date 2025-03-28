@@ -1,20 +1,23 @@
 import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
-// Environment variables
-const dbHost = process.env.DB_HOST || 'localhost';
-const dbUser = process.env.DB_USER || 'root';
-const dbPassword = process.env.DB_PASSWORD || 'goldfish';
-const dbName = process.env.DB_NAME || 'truth_or_dare';
+dotenv.config();
 
-// Create a pool of connections
-const pool = mysql.createPool({
-  host: dbHost,
-  user: dbUser,
-  password: dbPassword,
-  database: dbName,
+console.log('DB CONFIG LOADING from db.config.ts');
+console.log('DB_HOST:', process.env.DB_HOST);
+console.log('DB_USER:', process.env.DB_USER);
+console.log('DB_NAME:', process.env.DB_NAME);
+
+export const pool = mysql.createPool({
+  host: process.env.DB_HOST || '127.0.0.1', // Force IPv4 rather than IPv6 localhost
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'truth_or_dare',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
+
+console.log('Database pool created in db.config.ts with host:', process.env.DB_HOST || '127.0.0.1');
 
 export default pool; 

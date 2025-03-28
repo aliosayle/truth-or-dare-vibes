@@ -3,6 +3,7 @@ const axios = require('axios');
 
 const API_URL = 'http://127.0.0.1:3001/api';
 const TEST_CREDENTIALS = {
+  username: 'test',
   email: 'test@example.com',
   password: 'test123'
 };

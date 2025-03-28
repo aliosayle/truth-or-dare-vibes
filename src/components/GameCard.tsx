@@ -1,14 +1,17 @@
-
 import { Card } from "@/contexts/GameContext";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { useGame } from "@/contexts/GameContext";
 
 interface GameCardProps {
-  card: Card | null;
+  card?: Card | null;
   isRevealed?: boolean;
 }
 
-export const GameCard = ({ card, isRevealed = true }: GameCardProps) => {
+export const GameCard = ({ card: propCard, isRevealed = true }: GameCardProps) => {
+  const { currentCard } = useGame();
+  const card = propCard !== undefined ? propCard : currentCard;
+
   if (!card) {
     return (
       <motion.div 
@@ -25,7 +28,7 @@ export const GameCard = ({ card, isRevealed = true }: GameCardProps) => {
   }
 
   const isCardTruth = card.type === 'truth';
-  const cardTypeLabel = isCardTruth ? "El 7a2" : "Tarre2a";
+  const cardTypeLabel = isCardTruth ? "El 7a2i2a" : "El Jara2a";
 
   return (
     <AnimatePresence mode="wait">
@@ -45,7 +48,7 @@ export const GameCard = ({ card, isRevealed = true }: GameCardProps) => {
         exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.3 } }}
         whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
       >
-        {/* Background pattern */}
+        {/* Background pattern - updated with Lebanese-inspired patterns */}
         <motion.div 
           className="absolute inset-0 opacity-10"
           initial={{ backgroundPosition: "0% 0%" }}
@@ -55,10 +58,20 @@ export const GameCard = ({ card, isRevealed = true }: GameCardProps) => {
           }}
           style={{
             backgroundImage: isCardTruth 
-              ? "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233b82f6' fill-opacity='0.2' fill-rule='evenodd'%3E%3Ccircle cx='20' cy='20' r='5'/%3E%3C/g%3E%3C/svg%3E\")"
-              : "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ec4899' fill-opacity='0.2' fill-rule='evenodd'%3E%3Cpath d='M0 20L20 0L40 20L20 40z'/%3E%3C/g%3E%3C/svg%3E\")"
+              ? "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233b82f6' fill-opacity='0.3' fill-rule='evenodd'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Cpath d='M30 10L40 20L20 20z'/%3E%3Ccircle cx='10' cy='30' r='4'/%3E%3Ccircle cx='50' cy='30' r='4'/%3E%3C/g%3E%3C/svg%3E\")"
+              : "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ec4899' fill-opacity='0.3' fill-rule='evenodd'%3E%3Cpath d='M0 30L15 15L30 30L15 45z'/%3E%3Cpath d='M30 30L45 15L60 30L45 45z'/%3E%3C/g%3E%3C/svg%3E\")"
           }}
         />
+
+        {/* Lebanese flag inspired accent in corner */}
+        <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
+          <div className="absolute top-0 right-0 h-12 w-16 bg-gradient-to-br from-primary/30 to-primary/10"></div>
+          <div className="absolute top-2 right-2 h-8 w-8">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="h-full w-full text-white/40">
+              <path fill="currentColor" d="M442.8 182.4c0-88-76.6-159.4-170.8-159.4S101.2 94.4 101.2 182.4c0 15.6 5.4 24.4 5.4 24.4l20 17.7c-5.9-33.7 2.4-101.7 45.1-101.7 9 0 10 10.2 10.5 22.1.5 26-4.6 52.6 26.5 70.8 6.5 5.1 17.2 5.2 17.2 5.2l-12.5-66.3c9.4 4.7 68.1 6.1 68.1 6.1l-12.5 66.3s4.3-.7 9-2.4c22.9-8.7 38.9-24.7 46.9-59.7 3.3-14.2 8.9-42 40.8-42 40.9 0 47.1 67.5 41.1 101.3l20-17.7c.1 0 5.5-8.8 5.5-24.4z"/>
+            </svg>
+          </div>
+        </div>
 
         {/* Glowing corner effect */}
         <motion.div 
@@ -92,7 +105,7 @@ export const GameCard = ({ card, isRevealed = true }: GameCardProps) => {
         <div className="mt-auto z-10">
           <motion.div 
             className={cn(
-              "uppercase tracking-widest text-sm font-bold",
+              "uppercase tracking-widest text-sm font-bold flex items-center",
               isCardTruth ? "text-game-truth" : "text-game-dare"
             )}
             initial={{ opacity: 0, x: -20 }}
@@ -100,6 +113,10 @@ export const GameCard = ({ card, isRevealed = true }: GameCardProps) => {
             transition={{ delay: 0.5, duration: 0.5 }}
           >
             {cardTypeLabel}
+            {/* Easter egg - exactly 5% chance the card will secretly feature Lana's initial */}
+            {Math.random() < 0.05 && (
+              <span className="ml-2 opacity-20 text-xs">♥ L</span>
+            )}
           </motion.div>
         </div>
       </motion.div>

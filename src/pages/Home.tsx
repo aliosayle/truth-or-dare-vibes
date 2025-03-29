@@ -1,12 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Navbar } from '@/components/Navbar';
 import { motion } from 'framer-motion';
 import { ArrowRight, PackageOpen, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Home = () => {
   const { user, logout } = useAuth();
+  const [secretKeySequence, setSecretKeySequence] = useState('');
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+  
+  // Hidden Lana easter egg handler
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const updatedSequence = secretKeySequence + e.key.toLowerCase();
+      setSecretKeySequence(updatedSequence.slice(-4)); // Keep only last 4 keypresses
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [secretKeySequence]);
+  
+  // Check for 'lana' sequence
+  useEffect(() => {
+    if (secretKeySequence === 'lana') {
+      setShowEasterEgg(true);
+      setTimeout(() => setShowEasterEgg(false), 3000);
+    }
+  }, [secretKeySequence]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -20,83 +42,27 @@ const Home = () => {
       
       <Navbar />
       
-      <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <motion.div 
-            className="glass-panel p-6 mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <h1 className="text-2xl font-bold text-white">
-                  <span className="text-primary">Ahla w Sahla</span> {user?.username}!
-                </h1>
-                <p className="text-white/70">
-                  <span className="text-xs" title="Lana's special game">ل.ع - L.A</span> • {user?.type} user
-                </p>
-              </div>
-              <button 
-                onClick={logout}
-                className="btn-secondary text-sm"
-              >
-                Logout
-              </button>
-            </div>
-            
-            <div className="mt-6">
-              <h2 className="text-xl font-semibold text-white mb-3">
-                Yalla, let's play some Truth or Dare! <span className="text-xs opacity-50">حبيبي</span>
-              </h2>
-              <p className="text-white/70 mb-4">
-                Ka2annak bi Beirut, browse our Lebanese-themed packs and start playing!
-              </p>
-              
-              <Link to="/packs" className="btn-primary flex items-center gap-2 w-fit">
-                <PackageOpen size={18} />
-                <span>Browse Packs</span>
-                <ArrowRight size={16} />
-              </Link>
-            </div>
-          </motion.div>
+      <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center justify-center relative">
+        {showEasterEgg && (
+          <div className="absolute top-8 text-amber-400 animate-pulse text-lg font-bold tracking-wider">
+            Lana says hello from the shadows...
+          </div>
+        )}
+        
+        <div className="glass-panel p-8 max-w-md w-full text-center">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-6">
+            Welcome to Truth or Dare
+          </h1>
           
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <div className="glass-panel p-4 hover:border-primary/40 transition-colors">
-              <h3 className="text-white font-medium flex items-center gap-2">
-                <Star className="h-4 w-4 text-primary" />
-                Game Rules
-              </h3>
-              <p className="text-white/70 text-sm mt-2">
-                Khallik jari2! Take turns answering truth questions or performing dares with friends.
-              </p>
-            </div>
-            
-            <div className="glass-panel p-4 hover:border-primary/40 transition-colors">
-              <h3 className="text-white font-medium flex items-center gap-2">
-                <Star className="h-4 w-4 text-primary" />
-                Lebanese Vibes
-              </h3>
-              <p className="text-white/70 text-sm mt-2">
-                Ma fi metla! Enjoy our uniquely Lebanese take on the classic game.
-              </p>
-            </div>
-            
-            <div className="glass-panel p-4 hover:border-primary/40 transition-colors">
-              <h3 className="text-white font-medium flex items-center gap-2">
-                <Star className="h-4 w-4 text-primary" />
-                Special Surprise
-              </h3>
-              <p className="text-white/70 text-sm mt-2">
-                For <span className="font-semibold text-primary/80">L</span>ovely <span className="font-semibold text-primary/80">A</span>mazing <span className="font-semibold text-primary/80">N</span>oble <span className="font-semibold text-primary/80">A</span>dventurers only.
-              </p>
-            </div>
-          </motion.div>
+          <p className="text-white/80 mb-6">
+            Choose from our exciting packs and start playing with friends!
+          </p>
+          
+          <Link to="/packs">
+            <Button className="w-full">
+              Browse Packs
+            </Button>
+          </Link>
         </div>
       </main>
       

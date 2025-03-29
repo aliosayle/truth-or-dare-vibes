@@ -60,26 +60,37 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt for email:', email);
 
     // Find user
+    console.log('Querying database for user with email:', email);
     const [users] = await pool.query(
       'SELECT * FROM users WHERE email = ?',
       [email]
     );
 
+    console.log('Query result:', JSON.stringify(users));
+
     if ((users as any[]).length === 0) {
+      console.log('No user found with email:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const user = (users as any[])[0];
+    console.log('User found:', { id: user.id, email: user.email, type: user.type });
 
     // Check password
+    console.log('Comparing password...');
     const isValidPassword = await bcrypt.compare(password, user.password);
+    console.log('Password valid:', isValidPassword);
+    
     if (!isValidPassword) {
+      console.log('Invalid password for user:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Generate JWT token
+    console.log('Generating JWT token...');
     const token = jwt.sign(
       { userId: user.id, type: user.type },
       process.env.JWT_SECRET || 'your-secret-key',
@@ -89,6 +100,7 @@ export const login = async (req: Request, res: Response) => {
     // Remove password from user object
     const { password: _, ...userWithoutPassword } = user;
 
+    console.log('Login successful for user:', email);
     res.json({
       message: 'Login successful',
       user: userWithoutPassword,
@@ -96,7 +108,10 @@ export const login = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error during login' });
+    res.status(500).json({ 
+      message: 'Server error during login',
+      error: error instanceof Error ? error.message : String(error)
+    });
   }
 };
 

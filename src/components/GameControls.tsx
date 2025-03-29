@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useGame } from "@/contexts/GameContext";
 import { motion } from "framer-motion";
@@ -9,71 +8,99 @@ export const GameControls = () => {
   const { activePack, drawCard } = useGame();
   const isMobile = useIsMobile();
   
-  // For mobile, we'll use a more compact layout
-  const containerClass = isMobile
-    ? "grid grid-cols-3 gap-2 w-full max-w-md"
-    : "flex flex-row gap-4 w-full max-w-md";
-
+  // Accessible button text for screen readers only
+  const SrOnly = ({ children }) => (
+    <span className="sr-only">{children}</span>
+  );
+  
   return (
     <motion.div 
-      className={containerClass}
+      className={`w-full max-w-md ${isMobile ? 'bg-black/40 backdrop-blur-sm p-3 rounded-full shadow-xl' : ''}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1">
-        <Button
-          className="flex-1 btn-truth w-full shadow-lg shadow-game-truth/20 font-medium"
-          onClick={() => drawCard('truth')}
-          disabled={!activePack}
-          size={isMobile ? "sm" : "lg"}
+      <div className={`grid grid-cols-3 gap-${isMobile ? '2' : '3'} w-full`}>
+        <motion.div 
+          whileHover={{ scale: 1.05 }} 
+          whileTap={{ scale: 0.95 }} 
+          className="flex-1"
         >
-          {isMobile ? (
-            <MessageCircleQuestion className={isMobile ? "h-5 w-5" : "mr-2"} />
-          ) : (
-            <>
-              <MessageCircleQuestion className="mr-2" />
-              El 7a2
-            </>
-          )}
-        </Button>
-      </motion.div>
+          <Button
+            className="w-full h-12 rounded-full bg-game-truth text-white shadow-lg shadow-game-truth/20 font-medium hover:bg-game-truth/80"
+            onClick={() => drawCard('truth')}
+            disabled={!activePack}
+          >
+            {isMobile ? (
+              <>
+                <MessageCircleQuestion className="h-5 w-5" />
+                <SrOnly>Truth</SrOnly>
+              </>
+            ) : (
+              <>
+                <MessageCircleQuestion className="mr-2 h-5 w-5" />
+                Truth
+              </>
+            )}
+          </Button>
+        </motion.div>
+        
+        <motion.div 
+          whileHover={{ scale: 1.05 }} 
+          whileTap={{ scale: 0.95 }} 
+          className="flex-1"
+        >
+          <Button
+            className="w-full h-12 rounded-full bg-gradient-to-r from-primary to-secondary text-white shadow-lg font-medium"
+            onClick={() => drawCard()}
+            disabled={!activePack}
+          >
+            {isMobile ? (
+              <>
+                <Dices className="h-5 w-5" />
+                <SrOnly>Random</SrOnly>
+              </>
+            ) : (
+              <>
+                <Dices className="mr-2 h-5 w-5" />
+                Random
+              </>
+            )}
+          </Button>
+        </motion.div>
+        
+        <motion.div 
+          whileHover={{ scale: 1.05 }} 
+          whileTap={{ scale: 0.95 }} 
+          className="flex-1"
+        >
+          <Button
+            className="w-full h-12 rounded-full bg-game-dare text-white shadow-lg shadow-game-dare/20 font-medium hover:bg-game-dare/80"
+            onClick={() => drawCard('dare')}
+            disabled={!activePack}
+          >
+            {isMobile ? (
+              <>
+                <Flame className="h-5 w-5" />
+                <SrOnly>Dare</SrOnly>
+              </>
+            ) : (
+              <>
+                <Flame className="mr-2 h-5 w-5" />
+                Dare
+              </>
+            )}
+          </Button>
+        </motion.div>
+      </div>
       
-      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1">
-        <Button
-          className="flex-1 w-full bg-gradient-to-r from-primary to-secondary text-white shadow-lg font-medium"
-          onClick={() => drawCard()}
-          disabled={!activePack}
-          size={isMobile ? "sm" : "lg"}
-        >
-          {isMobile ? (
-            <Dices className={isMobile ? "h-5 w-5" : "mr-2"} />
-          ) : (
-            <>
-              <Dices className="mr-2" />
-              Yalla
-            </>
-          )}
-        </Button>
-      </motion.div>
-      
-      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1">
-        <Button
-          className="flex-1 btn-dare w-full shadow-lg shadow-game-dare/20 font-medium"
-          onClick={() => drawCard('dare')}
-          disabled={!activePack}
-          size={isMobile ? "sm" : "lg"}
-        >
-          {isMobile ? (
-            <Flame className={isMobile ? "h-5 w-5" : "mr-2"} />
-          ) : (
-            <>
-              <Flame className="mr-2" />
-              Jarreb
-            </>
-          )}
-        </Button>
-      </motion.div>
+      {isMobile && activePack && (
+        <div className="flex justify-center mt-2">
+          <span className="text-xs text-white/50 tracking-wide uppercase">
+            {activePack.cards?.filter(c => c.type === 'truth').length || 0} Truths • {activePack.cards?.filter(c => c.type === 'dare').length || 0} Dares
+          </span>
+        </div>
+      )}
     </motion.div>
   );
 };

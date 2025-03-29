@@ -15,11 +15,21 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     try {
+      console.log('Attempting to register with:', { username, email, password });
       await register(username, email, password);
+      console.log('Registration successful, navigating to home');
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Failed to register');
+      console.error('Registration error in component:', err);
+      if (err.response && err.response.data) {
+        setError(err.response.data.message || 'Failed to register');
+      } else if (err.message) {
+        setError(err.message);
+      } else {
+        setError('Registration failed. Please try again.');
+      }
     }
   };
 

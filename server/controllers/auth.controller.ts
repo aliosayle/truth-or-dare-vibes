@@ -2,36 +2,43 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { pool } from '../config/db';
+import { v4 as uuidv4 } from 'uuid';
 
 export const register = async (req: Request, res: Response) => {
   try {
     const { username, email, password, type = 'normal' } = req.body;
+    console.log('Registration attempt for:', { username, email, type });
 
     // Check if user already exists
+    console.log('Checking if user already exists...');
     const [existingUsers] = await pool.query(
       'SELECT * FROM users WHERE email = ? OR username = ?',
       [email, username]
     );
 
     if ((existingUsers as any[]).length > 0) {
+      console.log('User already exists:', email);
       return res.status(400).json({ message: 'User already exists' });
     }
 
     // Hash password
+    console.log('Hashing password...');
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Generate UUID
-    const [uuidResult] = await pool.query('SELECT UUID() as uuid');
-    const userId = (uuidResult as any[])[0].uuid;
+    const userId = uuidv4();
+    console.log('Generated userId:', userId);
 
     // Create user
+    console.log('Creating user in database...');
     await pool.query(
       'INSERT INTO users (id, username, email, password, type) VALUES (?, ?, ?, ?, ?)',
       [userId, username, email, hashedPassword, type]
     );
 
     // Get the newly created user
+    console.log('Fetching created user...');
     const [newUser] = await pool.query(
       'SELECT id, username, email, type FROM users WHERE id = ?',
       [userId]
@@ -40,12 +47,14 @@ export const register = async (req: Request, res: Response) => {
     const user = (newUser as any[])[0];
 
     // Generate JWT token
+    console.log('Generating JWT token...');
     const token = jwt.sign(
       { id: user.id, type: user.type },
       process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: '24h' }
     );
 
+    console.log('Registration successful for:', username);
     res.status(201).json({
       message: 'User registered successfully',
       user,
@@ -53,7 +62,20 @@ export const register = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ message: 'Server error during registration' });
+    let errorMessage = 'Server error during registration';
+    
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+      // Check for specific error types
+      if (error.message.includes('Duplicate entry')) {
+        errorMessage = 'Username or email already exists';
+      }
+    }
+    
+    res.status(500).json({ 
+      message: errorMessage,
+      error: error instanceof Error ? error.message : String(error)
+    });
   }
 };
 

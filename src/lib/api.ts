@@ -52,12 +52,19 @@ export const authApi = {
   },
 
   register: async (username: string, email: string, password: string, type?: string): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/register', { username, email, password, type });
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+    console.log('Register attempt with:', { username, email, type });
+    try {
+      const response = await api.post<AuthResponse>('/auth/register', { username, email, password, type });
+      console.log('Register response:', response.data);
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Register error:', error);
+      throw error;
     }
-    return response.data;
   },
 
   logout: () => {

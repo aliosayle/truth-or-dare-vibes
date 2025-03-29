@@ -11,9 +11,26 @@ const app = express();
 const port = parseInt(process.env.PORT || '3001', 10);
 const host = process.env.HOST || 'localhost';
 
+// Detailed CORS configuration
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://161.97.177.233:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
+
+// Debugging middleware for requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  if (req.method === 'POST' || req.method === 'PUT') {
+    console.log('Request body:', req.body);
+  }
+  next();
+});
 
 // Routes
 app.use('/api/auth', authRoutes);

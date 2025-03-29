@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { Pack, Card } from '../contexts/GameContext';
 
-const API_URL = 'http://161.97.177.233:3001/api';
+// Use local server for development
+const API_URL = 'http://127.0.0.1:3001/api';
 
 interface User {
   id: string;
@@ -36,12 +37,43 @@ api.interceptors.request.use((config) => {
 // Auth API
 export const authApi = {
   login: async (email: string, password: string): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/login', { email, password });
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+    console.log('Login API call with:', { email, password: password ? '[PASSWORD PROVIDED]' : 'missing' });
+    
+    if (!email || !password) {
+      console.error('Login failed: Missing email or password');
+      throw new Error('Email and password are required');
     }
-    return response.data;
+    
+    const loginData = { email, password };
+    console.log('Request payload:', JSON.stringify(loginData));
+    
+    try {
+      // Try login with explicit content type header
+      const response = await api.post<AuthResponse>('/auth/login', loginData, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      console.log('Login API response:', {
+        status: response.status,
+        hasToken: !!response.data.token,
+        hasUser: !!response.data.user
+      });
+      
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      return response.data;
+    } catch (error: any) {
+      console.error('Login API error:', {
+        status: error.response?.status,
+        message: error.response?.data?.message || error.message,
+        data: error.response?.data
+      });
+      throw error;
+    }
   },
 
   register: async (username: string, email: string, password: string, type?: string): Promise<AuthResponse> => {

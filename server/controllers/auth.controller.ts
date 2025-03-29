@@ -59,7 +59,21 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
+    console.log('Login request received');
+    console.log('Request headers:', req.headers);
+    console.log('Request body type:', typeof req.body);
+    console.log('Raw request body:', req.body);
+    
     const { email, password } = req.body;
+    
+    // Validate request body
+    if (!email || !password) {
+      console.log('Login failed: Missing email or password');
+      console.log('Email present:', !!email);
+      console.log('Password present:', !!password);
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+    
     console.log('Login attempt for email:', email);
 
     // Find user
@@ -69,7 +83,7 @@ export const login = async (req: Request, res: Response) => {
       [email]
     );
 
-    console.log('Query result:', JSON.stringify(users));
+    console.log('Query result length:', (users as any[]).length);
 
     if ((users as any[]).length === 0) {
       console.log('No user found with email:', email);

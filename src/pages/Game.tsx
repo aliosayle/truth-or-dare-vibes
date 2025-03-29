@@ -47,12 +47,12 @@ const Game = () => {
   }, [konamiSequence]);
 
   useEffect(() => {
-    if (packId) {
+    if (packId && !activePack) {
       setActivePack(packId);
-    } else if (packs.length > 0) {
+    } else if (packs.length > 0 && !packId) {
       navigate(`/game/${packs[0].id}`);
     }
-  }, [packId, packs, setActivePack, navigate]);
+  }, [packId, packs, setActivePack, navigate, activePack]);
 
   const goBack = () => {
     navigate('/packs');

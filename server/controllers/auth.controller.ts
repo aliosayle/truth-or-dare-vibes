@@ -41,7 +41,7 @@ export const register = async (req: Request, res: Response) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user.id, type: user.type },
+      { id: user.id, type: user.type },
       process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: '24h' }
     );
@@ -92,7 +92,7 @@ export const login = async (req: Request, res: Response) => {
     // Generate JWT token
     console.log('Generating JWT token...');
     const token = jwt.sign(
-      { userId: user.id, type: user.type },
+      { id: user.id, type: user.type },
       process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: '24h' }
     );

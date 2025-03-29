@@ -45,8 +45,24 @@ export const authApi = {
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login error:', error);
+      // Enhanced error reporting
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Server responded with error:', {
+          data: error.response.data,
+          status: error.response.status,
+          headers: error.response.headers
+        });
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received from server', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error setting up request:', error.message);
+      }
       throw error;
     }
   },
@@ -61,8 +77,24 @@ export const authApi = {
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Register error:', error);
+      // Enhanced error reporting
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Server responded with error:', {
+          data: error.response.data,
+          status: error.response.status,
+          headers: error.response.headers
+        });
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received from server', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error setting up request:', error.message);
+      }
       throw error;
     }
   },

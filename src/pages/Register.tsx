@@ -3,55 +3,23 @@ import { Navbar } from '@/components/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { UserPlus, User, Mail, Lock, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { UserPlus, User, Mail, Lock } from 'lucide-react';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setIsLoading(true);
-    
     try {
-      console.log('Attempting to register with:', { username, email, password });
-      toast.info('Creating your account...');
-      
-      const result = await register(username, email, password);
-      
-      console.log('Registration successful, navigating to home', result);
-      toast.success('Account created successfully!');
+      await register(username, email, password);
       navigate('/');
     } catch (err: any) {
-      console.error('Registration error in component:', err);
-      
-      let errorMsg = 'Registration failed. Please try again.';
-      
-      if (err.response) {
-        if (err.response.data && err.response.data.message) {
-          errorMsg = err.response.data.message;
-        } else if (err.response.status === 0) {
-          errorMsg = 'Cannot connect to server. Please check your internet connection.';
-        } else if (err.response.status === 500) {
-          errorMsg = 'Server error. Please try again later.';
-        }
-      } else if (err.request) {
-        errorMsg = 'No response from server. Please try again later.';
-      } else if (err.message) {
-        errorMsg = err.message;
-      }
-      
-      toast.error(errorMsg);
-      setError(errorMsg);
-    } finally {
-      setIsLoading(false);
+      setError(err.message || 'Failed to register');
     }
   };
 
@@ -102,7 +70,6 @@ const Register = () => {
                     className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50"
                     placeholder="Choose a username"
                     required
-                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -121,7 +88,6 @@ const Register = () => {
                     className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50"
                     placeholder="Enter your email"
                     required
-                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -140,7 +106,6 @@ const Register = () => {
                     className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50"
                     placeholder="Create a password"
                     required
-                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -148,14 +113,9 @@ const Register = () => {
               <button
                 type="submit"
                 className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-lg transition-colors"
-                disabled={isLoading}
               >
-                {isLoading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <UserPlus className="h-5 w-5" />
-                )}
-                {isLoading ? 'Creating Account...' : 'Create Account'}
+                <UserPlus className="h-5 w-5" />
+                Create Account
               </button>
             </form>
 

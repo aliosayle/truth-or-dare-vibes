@@ -20,7 +20,7 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string, type?: string) => Promise<AuthResponse>;
+  register: (username: string, email: string, password: string, type?: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -66,16 +66,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (username: string, email: string, password: string, type?: string) => {
     try {
-      console.log('AuthContext: Starting registration process', { username, email });
       setError(null);
       const data = await authApi.register(username, email, password, type) as AuthResponse;
-      console.log('AuthContext: Registration successful, setting user', data);
       setUser(data.user);
-      return data;
     } catch (err: any) {
-      console.error('AuthContext: Registration failed', err);
-      const errorMessage = err.response?.data?.message || 'Registration failed';
-      setError(errorMessage);
+      setError(err.response?.data?.message || 'Registration failed');
       throw err;
     }
   };

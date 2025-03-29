@@ -36,67 +36,21 @@ api.interceptors.request.use((config) => {
 // Auth API
 export const authApi = {
   login: async (email: string, password: string): Promise<AuthResponse> => {
-    console.log('Login attempt with:', { email, password });
-    try {
-      const response = await api.post<AuthResponse>('/auth/login', { email, password });
-      console.log('Login response:', response.data);
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-      }
-      return response.data;
-    } catch (error: any) {
-      console.error('Login error:', error);
-      // Enhanced error reporting
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error('Server responded with error:', {
-          data: error.response.data,
-          status: error.response.status,
-          headers: error.response.headers
-        });
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received from server', error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error setting up request:', error.message);
-      }
-      throw error;
+    const response = await api.post<AuthResponse>('/auth/login', { email, password });
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
     }
+    return response.data;
   },
 
   register: async (username: string, email: string, password: string, type?: string): Promise<AuthResponse> => {
-    console.log('Register attempt with:', { username, email, type });
-    try {
-      const response = await api.post<AuthResponse>('/auth/register', { username, email, password, type });
-      console.log('Register response:', response.data);
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-      }
-      return response.data;
-    } catch (error: any) {
-      console.error('Register error:', error);
-      // Enhanced error reporting
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error('Server responded with error:', {
-          data: error.response.data,
-          status: error.response.status,
-          headers: error.response.headers
-        });
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received from server', error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error setting up request:', error.message);
-      }
-      throw error;
+    const response = await api.post<AuthResponse>('/auth/register', { username, email, password, type });
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
     }
+    return response.data;
   },
 
   logout: () => {

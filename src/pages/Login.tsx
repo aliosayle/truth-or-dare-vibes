@@ -14,20 +14,11 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     try {
-      console.log('Submitting login with:', { email, password });
       await login(email, password);
       navigate('/');
     } catch (err: any) {
-      console.error('Login error in component:', err);
-      if (err.response && err.response.data) {
-        setError(err.response.data.message || 'Failed to login');
-      } else if (err.message) {
-        setError(err.message);
-      } else {
-        setError('Login failed. Please check your credentials and try again.');
-      }
+      setError(err.message || 'Failed to login');
     }
   };
 

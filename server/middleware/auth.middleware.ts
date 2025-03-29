@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { pool } from '../config/db';
 
 interface JwtPayload {
-  id: string;
+  userId: string;
   type: string;
 }
 
@@ -30,7 +30,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key') as JwtPayload;
     
     // Get user from database to ensure they still exist
-    const [users] = await pool.query('SELECT id, type FROM users WHERE id = ?', [decoded.id]);
+    const [users] = await pool.query('SELECT id, type FROM users WHERE id = ?', [decoded.userId]);
     const user = (users as any[])[0];
 
     if (!user) {
@@ -44,20 +44,17 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 
     next();
   } catch (error) {
-    console.error('Authentication error:', error);
     return res.status(401).json({ message: 'Invalid token' });
   }
 };
 
-export const authorize = (allowedTypes: string[] | string) => {
+export const authorize = (allowedTypes: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
       return res.status(401).json({ message: 'Authentication required' });
     }
 
-    const types = Array.isArray(allowedTypes) ? allowedTypes : [allowedTypes];
-    
-    if (!types.includes(req.user.type)) {
+    if (!allowedTypes.includes(req.user.type)) {
       return res.status(403).json({ message: 'Access denied' });
     }
 

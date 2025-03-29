@@ -83,12 +83,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return;
     }
     
-    if (!activePack.cards || !Array.isArray(activePack.cards)) {
-      console.error('No cards array found in active pack:', activePack);
-      toast.error("This pack doesn't have any cards yet");
-      return;
-    }
-    
     const availableCards = type 
       ? activePack.cards.filter(card => card.type === type)
       : activePack.cards;

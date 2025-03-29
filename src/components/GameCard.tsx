@@ -2,26 +2,6 @@ import { Card } from "@/contexts/GameContext";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGame } from "@/contexts/GameContext";
-import { Sparkles } from 'lucide-react';
-
-// Easter egg detection
-const hasLanaEasterEgg = (content: string): boolean => {
-  const words = content.toLowerCase().split(' ');
-  
-  // Check if first letters of consecutive words spell LANA
-  for (let i = 0; i < words.length - 3; i++) {
-    if (
-      words[i].charAt(0) === 'l' &&
-      words[i+1].charAt(0) === 'a' &&
-      words[i+2].charAt(0) === 'n' &&
-      words[i+3].charAt(0) === 'a'
-    ) {
-      return true;
-    }
-  }
-  
-  return false;
-};
 
 interface GameCardProps {
   card?: Card | null;
@@ -50,16 +30,13 @@ export const GameCard = ({ card: propCard, isRevealed = true }: GameCardProps) =
   const isCardTruth = card.type === 'truth';
   const cardTypeLabel = isCardTruth ? "El 7a2i2a" : "El Jara2a";
 
-  const isLanaCard = hasLanaEasterEgg(card.content);
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key={card.id}
         className={cn(
           "w-full max-w-md aspect-[3/4] rounded-2xl p-8 flex flex-col relative overflow-hidden",
-          isCardTruth ? "card-truth" : "card-dare",
-          isLanaCard ? "lana-easter-egg" : ""
+          isCardTruth ? "card-truth" : "card-dare"
         )}
         initial={{ opacity: 0, rotateY: 90, scale: 0.9 }}
         animate={{ 
@@ -133,7 +110,10 @@ export const GameCard = ({ card: propCard, isRevealed = true }: GameCardProps) =
             transition={{ delay: 0.5, duration: 0.5 }}
           >
             {cardTypeLabel}
-            {isLanaCard && <Sparkles size={16} className="ml-2 animate-pulse text-amber-300" />}
+            {/* Easter egg - exactly 5% chance the card will secretly feature Lana's initial */}
+            {Math.random() < 0.05 && (
+              <span className="ml-2 opacity-20 text-xs">♥ L</span>
+            )}
           </motion.div>
         </div>
       </motion.div>

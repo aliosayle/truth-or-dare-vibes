@@ -14,29 +14,11 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Form validation
-    if (!email || !email.trim()) {
-      setError('Email is required');
-      return;
-    }
-    
-    if (!password || !password.trim()) {
-      setError('Password is required');
-      return;
-    }
-    
-    console.log('Submitting login form with:', { email, password: '********' });
-    
     try {
-      setError('');
-      await login(email.trim(), password.trim());
-      console.log('Login successful, navigating to home');
+      await login(email, password);
       navigate('/');
     } catch (err: any) {
-      console.error('Login error:', err);
-      const errorMessage = err.response?.data?.message || err.message || 'Failed to login';
-      setError(errorMessage);
+      setError(err.message || 'Failed to login');
     }
   };
 
@@ -72,11 +54,7 @@ const Login = () => {
               </div>
             )}
 
-            <form 
-              onSubmit={handleSubmit} 
-              className="space-y-6"
-              noValidate
-            >
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-white/70 mb-2">
                   Email
@@ -88,10 +66,6 @@ const Login = () => {
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    onBlur={(e) => {
-                      if (!e.target.value) setError('Email is required');
-                      else setError('');
-                    }}
                     className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50"
                     placeholder="Enter your email"
                     required
@@ -110,10 +84,6 @@ const Login = () => {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    onBlur={(e) => {
-                      if (!e.target.value) setError('Password is required');
-                      else setError('');
-                    }}
                     className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50"
                     placeholder="Enter your password"
                     required
@@ -124,7 +94,6 @@ const Login = () => {
               <button
                 type="submit"
                 className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-lg transition-colors"
-                disabled={!email || !password}
               >
                 <LogIn className="h-5 w-5" />
                 Sign In

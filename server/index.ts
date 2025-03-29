@@ -11,8 +11,15 @@ const app = express();
 const port = parseInt(process.env.PORT || '3001', 10);
 const host = process.env.HOST || 'localhost';
 
+// CORS configuration
+const corsOptions = {
+  origin: ['http://161.97.177.233:3000', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes

@@ -42,6 +42,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [activePack, setActivePackState] = useState<Pack | null>(null);
   const [currentCard, setCurrentCard] = useState<Card | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [lastLoadedPackId, setLastLoadedPackId] = useState<string | null>(null);
 
   useEffect(() => {
     loadPacks();
@@ -61,7 +62,21 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const setActivePack = async (packId: string) => {
+    if (lastLoadedPackId === packId && activePack?.id === packId) {
+      console.log('Pack already active, skipping fetch:', packId);
+      return;
+    }
+    
     try {
+      const existingPack = packs.find(p => p.id === packId);
+      if (existingPack) {
+        console.log('Using cached pack:', existingPack);
+        setActivePackState(existingPack);
+        setCurrentCard(null);
+        setLastLoadedPackId(packId);
+        return;
+      }
+      
       const pack = await packsApi.getPackById(packId);
       console.log('Setting active pack:', pack);
       if (!pack) {
@@ -70,6 +85,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
       setActivePackState(pack);
       setCurrentCard(null);
+      setLastLoadedPackId(packId);
     } catch (error) {
       toast.error('Failed to load pack');
       console.error(error);

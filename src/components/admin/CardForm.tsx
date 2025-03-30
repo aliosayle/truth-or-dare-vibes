@@ -1,10 +1,9 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useGame } from "@/contexts/GameContext";
-import { Plus } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { Plus, Sparkles } from "lucide-react";
+import { FormEvent, useState, useEffect } from "react";
 import { 
   Select, 
   SelectContent, 
@@ -18,6 +17,16 @@ export const CardForm = () => {
   const [content, setContent] = useState("");
   const [type, setType] = useState<"truth" | "dare">("truth");
   const [packId, setPackId] = useState("");
+  const [lanaMode, setLanaMode] = useState(false);
+  
+  // Check if content contains 'lana' to activate easter egg
+  useEffect(() => {
+    if (content.toLowerCase().includes('lana')) {
+      setLanaMode(true);
+    } else {
+      setLanaMode(false);
+    }
+  }, [content]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -33,8 +42,11 @@ export const CardForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 glass-panel p-6">
-      <h2 className="text-xl font-bold">Create New Lebanese Card</h2>
+    <form onSubmit={handleSubmit} className={`space-y-4 glass-panel p-6 ${lanaMode ? 'lana-secret-active' : ''}`}>
+      <h2 className="text-xl font-bold flex items-center">
+        Create New Lebanese Card
+        {lanaMode && <Sparkles size={16} className="ml-2 text-amber-400 animate-pulse" />}
+      </h2>
       
       <div className="space-y-2">
         <label htmlFor="cardPack" className="text-sm text-white/70">
@@ -43,7 +55,7 @@ export const CardForm = () => {
         <Select onValueChange={setPackId} value={packId}>
           <SelectTrigger 
             id="cardPack"
-            className="bg-black/30 border-white/20"
+            className={`bg-black/30 border-white/20 ${lanaMode ? 'border-amber-500/30' : ''}`}
           >
             <SelectValue placeholder="Select a pack" />
           </SelectTrigger>
@@ -64,7 +76,7 @@ export const CardForm = () => {
         <Select onValueChange={(val) => setType(val as "truth" | "dare")} value={type}>
           <SelectTrigger 
             id="cardType" 
-            className="bg-black/30 border-white/20"
+            className={`bg-black/30 border-white/20 ${lanaMode ? 'border-amber-500/30' : ''}`}
           >
             <SelectValue />
           </SelectTrigger>
@@ -84,18 +96,24 @@ export const CardForm = () => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder={type === "truth" ? "e.g. What's your favorite Lebanese dish?" : "e.g. Sing a verse from a famous Lebanese song"}
-          className="bg-black/30 border-white/20"
+          className={`bg-black/30 border-white/20 ${lanaMode ? 'border-amber-500/30' : ''}`}
           required
           rows={3}
         />
+        {lanaMode && (
+          <p className="text-xs italic text-amber-500/70 mt-1">
+            Creating a special card for Lana...
+          </p>
+        )}
       </div>
       
       <Button 
         type="submit" 
-        className={type === "truth" ? "w-full btn-truth" : "w-full btn-dare"}
+        className={`w-full ${lanaMode ? 'bg-gradient-to-r from-amber-600 to-yellow-500 hover:from-amber-500 hover:to-yellow-400' : 
+          type === "truth" ? "btn-truth" : "btn-dare"}`}
         disabled={!packId}
       >
-        <Plus className="mr-2 h-4 w-4" /> Add {type} Card
+        <Plus className="mr-2 h-4 w-4" /> Add {lanaMode ? "Lana's" : ""} {type} Card
       </Button>
     </form>
   );

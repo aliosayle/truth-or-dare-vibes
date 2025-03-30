@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
@@ -59,10 +58,10 @@ const config = {
           truth: "#3b82f6",
           dare: "#ec4899"
         },
-        lebanese: {
-          red: "#EF233C",
-          white: "#ffffff",
-          cedar: "#00A859"
+        theme: {
+          purple: "#9b87f5",
+          pink: "#D946EF",
+          lavender: "#7E69AB"
         }
       },
       borderRadius: {

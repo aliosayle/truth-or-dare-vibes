@@ -37,8 +37,8 @@ const Packs = () => {
       <div className="gradient-orb" style={{ top: '10%', left: '10%' }}></div>
       <div className="gradient-orb" style={{ bottom: '10%', right: '10%', animationDelay: '-5s' }}></div>
       
-      {/* Lebanese flag colors - subtle gradient accent */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 via-white to-green-600"></div>
+      {/* Modern theme accent */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-purple-600"></div>
       
       <Navbar />
       

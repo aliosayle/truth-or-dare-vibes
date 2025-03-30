@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { PackSelector } from '@/components/PackSelector';
 import { GameCard } from '@/components/GameCard';
@@ -9,34 +9,58 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 
 const Game = () => {
-  const { currentCard, setActivePack, activePack } = useGame();
+  const { currentCard, setActivePack, activePack, packs } = useGame();
   const { packId } = useParams<{ packId: string }>();
   const navigate = useNavigate();
-  const [showLanaEasterEgg, setShowLanaEasterEgg] = useState(false);
-  const [eggCount, setEggCount] = useState(0);
+  const [konamiSequence, setKonamiSequence] = useState<string[]>([]);
+  const [showLanaSecret, setShowLanaSecret] = useState(false);
+  const initRef = useRef(false);
   
-  // Easter egg trigger - clicking 5 times on a special spot
-  const triggerEasterEgg = () => {
-    setEggCount(prev => {
-      const newCount = prev + 1;
-      if (newCount >= 5) {
-        setShowLanaEasterEgg(true);
-        setTimeout(() => setShowLanaEasterEgg(false), 3000);
-        return 0;
-      }
-      return newCount;
-    });
-  };
-  
+  // Secret Lana easter egg - Konami code variation "LANA"
   useEffect(() => {
-    // If a packId is provided in the URL and it's different from the current active pack
-    if (packId && (!activePack || activePack.id !== packId)) {
-      setActivePack(packId);
-    } else if (!packId) {
-      // If no packId, redirect to packs selection page
-      navigate('/packs');
-    }
-  }, [packId, activePack, setActivePack, navigate]);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Using key codes to spell LANA: Left-A-N-A
+      const key = e.key.toLowerCase();
+      let secretUpdated = [...konamiSequence, key];
+      if (secretUpdated.length > 4) {
+        secretUpdated = secretUpdated.slice(-4);
+      }
+      setKonamiSequence(secretUpdated);
+      
+      // Check if last 4 keys spell "lana" (using ArrowLeft for L)
+      if (
+        secretUpdated.length === 4 &&
+        secretUpdated[0] === "arrowleft" &&
+        secretUpdated[1] === "a" &&
+        secretUpdated[2] === "n" &&
+        secretUpdated[3] === "a"
+      ) {
+        setShowLanaSecret(true);
+        setTimeout(() => setShowLanaSecret(false), 5000);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [konamiSequence]);
+
+  // Single effect to handle navigation and pack initialization
+  useEffect(() => {
+    // Only run this once when the component mounts
+    if (initRef.current) return;
+    
+    const initGame = async () => {
+      if (packId) {
+        await setActivePack(packId);
+        initRef.current = true;
+      } else if (packs.length > 0) {
+        navigate(`/game/${packs[0].id}`);
+        initRef.current = true;
+      }
+    };
+    
+    initGame();
+  }, [packId, packs, setActivePack, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -45,55 +69,30 @@ const Game = () => {
       <div className="gradient-orb" style={{ top: '10%', left: '10%' }}></div>
       <div className="gradient-orb" style={{ bottom: '10%', right: '10%', animationDelay: '-5s' }}></div>
       
-      {/* Lebanese theme - subtle cedar outline */}
-      <div className="fixed bottom-0 left-0 w-full h-16 bg-[url('/cedar-silhouette.png')] bg-repeat-x bg-bottom opacity-10 pointer-events-none"></div>
+      {/* Modern design accent */}
+      <div className="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-purple-600"></div>
       
       <Navbar />
       
-      <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center">
-        <div className="w-full max-w-4xl">
-          <PackSelector />
-          
-          <div 
-            className="mt-8 relative"
-            onClick={triggerEasterEgg}  
-          >
-            <AnimatePresence>
-              {showLanaEasterEgg && (
-                <motion.div 
-                  className="absolute -top-12 right-0 left-0 text-center z-10"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                >
-                  <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary/30 px-4 py-2 rounded-full">
-                    <Sparkles className="text-yellow-300 h-4 w-4" />
-                    <span className="text-white text-sm">Yalla Lana, you've got this! 💖</span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            
-            <GameCard />
+      <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center justify-center relative">
+        {showLanaSecret && (
+          <div className="absolute inset-0 pointer-events-none bg-amber-500/5 z-10 flex items-center justify-center">
+            <div className="text-3xl font-bold text-amber-500/30 tracking-[0.5em] rotate-12 blur-sm animate-pulse">
+              LANA
+            </div>
           </div>
-          
-          <div className="mt-8">
-            <GameControls />
-            
-            {/* Lebanese phrase that changes with card type */}
-            {currentCard && (
-              <motion.div 
-                className="mt-4 text-center text-white/60 text-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-              >
-                {currentCard.type === 'truth' ? 
-                  '"El 7a2i2a btekshaf metel el ze3t, ma fi shi bi dal mkhaba." (Truth reveals like oil, nothing stays hidden.)' :
-                  '"Jawwa jawwak w tekram 3enak!" (Go with the flow and honor your promise!)'}
-              </motion.div>
-            )}
+        )}
+        
+        {activePack && (
+          <div className="text-center mb-6">
+            <h2 className="text-xl md:text-2xl font-bold text-white">{activePack.name}</h2>
+            <p className="text-white/60">{activePack.description}</p>
           </div>
+        )}
+        
+        <div className="flex-1 w-full flex flex-col items-center justify-center">
+          <GameCard card={currentCard} />
+          <GameControls />
         </div>
       </main>
       
@@ -104,7 +103,7 @@ const Game = () => {
           transition={{ delay: 1, duration: 1 }}
           className="text-xs"
         >
-          Yalla, chabna! 🇱🇧 — Truth or Dare with a Lebanese twist
+          Yalla, chabna! — Truth or Dare with a modern twist
         </motion.p>
       </footer>
     </div>
